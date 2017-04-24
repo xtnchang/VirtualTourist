@@ -18,8 +18,9 @@ class PhotosViewController: UIViewController {
     var coordinate: CLLocationCoordinate2D?
     
     override func viewDidLoad() {
-
-        showPin() 
+        showPin()
+        collectionView.delegate = self
+        collectionView.dataSource = self
     }
     
     func showPin() {
@@ -44,7 +45,7 @@ extension PhotosViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return 0
+        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
