@@ -71,6 +71,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="2Bl-5y-qWJ">
+                                <rect key="frame" x="0.0" y="59" width="375" height="183"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="183" id="qwH-cd-oHm"/>
+                                </constraints>
+                            </mapView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="GfE-TI-Xdx">
                                 <rect key="frame" x="16" y="242" width="343" height="425"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -91,12 +97,15 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="2Bl-5y-qWJ">
-                                <rect key="frame" x="0.0" y="59" width="375" height="183"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="183" id="qwH-cd-oHm"/>
-                                </constraints>
-                            </mapView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yVk-3S-10g">
+                                <rect key="frame" x="0.0" y="615" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="khd-VQ-eQv"/>
+                                    <barButtonItem title="New Collection" id="Hi1-6F-48e"/>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="8j9-KX-EUo"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>

@@ -14,6 +14,8 @@ class MapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     
+    var coordinate: CLLocationCoordinate2D?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
@@ -32,11 +34,11 @@ class MapViewController: UIViewController {
            
             // Convert the CGPoint to a CLLocationCoordinate2D
             // https://developer.apple.com/reference/mapkit/mkmapview/1452503-convert
-            let coordinate = mapView.convert(pressedLocation, toCoordinateFrom: mapView)
+            self.coordinate = mapView.convert(pressedLocation, toCoordinateFrom: mapView)
             
             // Add the CLLocationCoordinate2D to the map.
             let annotation = MKPointAnnotation()
-            annotation.coordinate = coordinate
+            annotation.coordinate = self.coordinate!
             self.mapView.addAnnotation(annotation)
         }
     }
@@ -64,6 +66,9 @@ extension MapViewController: MKMapViewDelegate {
         // To stay in the navigation stack, use push instead of present.
         // http://stackoverflow.com/questions/24038215/how-to-navigate-from-one-view-controller-to-another-using-swift
         self.navigationController?.pushViewController(controller, animated: true)
+        
+        // Pass the coordinate information to the PhotosViewController
+        controller.coordinate = self.coordinate
     }
 
 }
