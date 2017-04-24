@@ -42,8 +42,9 @@ class PhotosViewController: UIViewController {
     
     @IBAction func barButtonPressed(_ sender: Any) {
         
-        if barButton.title == "Remove Selected Pictures" {
+        if barButton.title == "Remove selected pictures" {
             print("remove cells")
+            barButton.title = "Refresh collection"
         } else {
             print("refresh collection")
         }
@@ -79,7 +80,7 @@ extension PhotosViewController: UICollectionViewDelegate {
         cell?.alpha = 0.5
         
         // Whenver user selects one or more cells, the bar button changes to Remove Selected Pictures
-        self.barButton.title = "Remove Selected Pictures"
+        self.barButton.title = "Remove selected pictures"
     }
     
 }

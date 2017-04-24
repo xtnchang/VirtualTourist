@@ -104,7 +104,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="khd-VQ-eQv"/>
-                                    <barButtonItem title="New Collection" id="Hi1-6F-48e">
+                                    <barButtonItem title="Refresh collection" id="Hi1-6F-48e">
                                         <connections>
                                             <action selector="barButtonPressed:" destination="VaO-bj-EET" id="yoe-qH-ceP"/>
                                         </connections>
