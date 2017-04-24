@@ -14,6 +14,7 @@ class PhotosViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var barButton: UIBarButtonItem!
     
     var coordinate: CLLocationCoordinate2D?
     
@@ -37,6 +38,16 @@ class PhotosViewController: UIViewController {
         let coordinateRegion = MKCoordinateRegion(center: coordinate!, span: coordinateSpan)
         self.mapView.setRegion(coordinateRegion, animated: true)
     }
+    
+    
+    @IBAction func barButtonPressed(_ sender: Any) {
+        
+        if barButton.title == "Remove Selected Pictures" {
+            print("remove cells")
+        } else {
+            print("refresh collection")
+        }
+    }
 
 }
 
@@ -45,7 +56,7 @@ extension PhotosViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return 1
+        return 15
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -60,10 +71,15 @@ extension PhotosViewController: UICollectionViewDataSource {
 // MARK: UICollectionViewDelegate
 extension PhotosViewController: UICollectionViewDelegate {
     
-    // When user taps a collection item, print 
+    // Things to do when a user taps photo cells
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        print("cell pressed")
+        // Fade out selected cells
+        let cell = collectionView.cellForItem(at: indexPath as IndexPath)
+        cell?.alpha = 0.5
+        
+        // Whenver user selects one or more cells, the bar button changes to Remove Selected Pictures
+        self.barButton.title = "Remove Selected Pictures"
     }
     
 }
