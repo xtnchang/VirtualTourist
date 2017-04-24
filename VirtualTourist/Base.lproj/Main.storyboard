@@ -50,7 +50,7 @@
                             <constraint firstItem="B7q-AP-K67" firstAttribute="top" secondItem="bVz-Dm-Tpp" secondAttribute="bottom" id="elj-JE-b8i"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="2D0-Nz-bTy"/>
+                    <navigationItem key="navigationItem" title="Virtual Tourist" id="2D0-Nz-bTy" userLabel="Virtual Tourist"/>
                     <connections>
                         <outlet property="mapView" destination="bVz-Dm-Tpp" id="Bvl-tG-D2F"/>
                     </connections>
