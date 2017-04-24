@@ -15,6 +15,7 @@ class MapViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     
     var coordinate: CLLocationCoordinate2D?
+    var annotation: MKPointAnnotation?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,9 +38,9 @@ class MapViewController: UIViewController {
             self.coordinate = mapView.convert(pressedLocation, toCoordinateFrom: mapView)
             
             // Add the CLLocationCoordinate2D to the map.
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = self.coordinate!
-            self.mapView.addAnnotation(annotation)
+            self.annotation = MKPointAnnotation()
+            self.annotation?.coordinate = self.coordinate!
+            self.mapView.addAnnotation(annotation!)
         }
     }
     
@@ -69,6 +70,9 @@ extension MapViewController: MKMapViewDelegate {
         
         // Pass the coordinate information to the PhotosViewController
         controller.coordinate = self.coordinate
+        
+        // Deselect the pin so that it's selectable again when we return from PhotosViewController
+        self.mapView.deselectAnnotation(self.annotation, animated: true)
     }
 
 }
