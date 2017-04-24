@@ -10,13 +10,13 @@ import Foundation
 import UIKit
 import MapKit
 
-class MapViewController: UIViewController, MKMapViewDelegate {
+class MapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        mapView.delegate = self
         activateGestureRecognizer()
     }
     
@@ -52,3 +52,22 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
 
 }
+
+// MARK: MKMapViewDelegate
+extension MapViewController: MKMapViewDelegate {
+    
+    // When user taps a pin, move to the next view controller
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        
+        let controller = self.storyboard?.instantiateViewController(withIdentifier: "PhotosViewController") as! PhotosViewController
+        
+        self.present(controller, animated: true, completion: nil)
+    }
+
+}
+
+
+
+
+
+
