@@ -38,3 +38,31 @@ class PhotosViewController: UIViewController {
     }
 
 }
+
+// MARK: UICollectionViewDataSource
+extension PhotosViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) 
+        
+        return cell
+    }
+    
+}
+
+// MARK: UICollectionViewDelegate
+extension PhotosViewController: UICollectionViewDelegate {
+    
+    // When user taps a collection item, print 
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        print("cell pressed")
+    }
+    
+}
