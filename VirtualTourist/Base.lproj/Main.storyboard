@@ -70,12 +70,53 @@
                     <view key="view" contentMode="scaleToFill" id="v0N-vT-Sq8">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="GfE-TI-Xdx">
+                                <rect key="frame" x="16" y="242" width="343" height="425"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="waD-4f-zje">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Lig-wU-rbY">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="2Bl-5y-qWJ">
+                                <rect key="frame" x="0.0" y="59" width="375" height="183"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="183" id="qwH-cd-oHm"/>
+                                </constraints>
+                            </mapView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="2Bl-5y-qWJ" firstAttribute="top" secondItem="POc-dM-WvK" secondAttribute="bottom" constant="39" id="4nw-UD-arN"/>
+                            <constraint firstItem="Rzj-Bh-pmk" firstAttribute="top" secondItem="GfE-TI-Xdx" secondAttribute="bottom" id="9GD-Ek-XnU"/>
+                            <constraint firstItem="2Bl-5y-qWJ" firstAttribute="leading" secondItem="v0N-vT-Sq8" secondAttribute="leading" id="AQQ-fk-rPd"/>
+                            <constraint firstItem="GfE-TI-Xdx" firstAttribute="top" secondItem="2Bl-5y-qWJ" secondAttribute="bottom" id="LGU-G1-y6O"/>
+                            <constraint firstItem="2Bl-5y-qWJ" firstAttribute="centerX" secondItem="GfE-TI-Xdx" secondAttribute="centerX" id="bxT-81-pgg"/>
+                            <constraint firstItem="GfE-TI-Xdx" firstAttribute="leading" secondItem="v0N-vT-Sq8" secondAttribute="leadingMargin" id="c6B-Q4-Fsp"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="GfE-TI-Xdx" secondAttribute="trailing" id="zAm-jA-Tjw"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="collectionView" destination="GfE-TI-Xdx" id="1eG-Vq-ele"/>
+                        <outlet property="mapView" destination="2Bl-5y-qWJ" id="oDy-Dy-LiD"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tsc-tD-Kvj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1514" y="62"/>
+            <point key="canvasLocation" x="1512.8" y="61.619190404797607"/>
         </scene>
     </scenes>
 </document>
