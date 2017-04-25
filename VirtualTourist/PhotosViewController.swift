@@ -17,6 +17,7 @@ class PhotosViewController: UIViewController {
     @IBOutlet weak var barButton: UIBarButtonItem!
     
     var coordinate: CLLocationCoordinate2D?
+    var indexPathArray = [IndexPath]()
     
     override func viewDidLoad() {
         showPin()
@@ -43,8 +44,10 @@ class PhotosViewController: UIViewController {
     @IBAction func barButtonPressed(_ sender: Any) {
         
         if barButton.title == "Remove selected pictures" {
-            print("remove cells")
-            barButton.title = "Refresh collection"
+            print("remove selected cells")
+            print(self.indexPathArray)
+            // self.collectionView.deleteItems(at: self.indexPathArray)
+            self.barButton.title = "Refresh collection"
         } else {
             print("refresh collection")
         }
@@ -79,8 +82,10 @@ extension PhotosViewController: UICollectionViewDelegate {
         let cell = collectionView.cellForItem(at: indexPath as IndexPath)
         cell?.alpha = 0.5
         
-        // Whenver user selects one or more cells, the bar button changes to Remove Selected Pictures
+        // Whenever user selects one or more cells, the bar button changes to Remove selecetd pictures
         self.barButton.title = "Remove selected pictures"
+        
+        self.indexPathArray.append(indexPath)
     }
     
 }
