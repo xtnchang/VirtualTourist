@@ -10,28 +10,30 @@ import Foundation
 
 extension FlickrClient {
     
+    // Sample URL: https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d592362beec3f98703d88ff5d1d35647&format=json&nojsoncallback=1&auth_token=72157680012118213-ba4752877870d261&api_sig=dcce79813ac936e6ffa88f687efece01
+    
     // MARK: URL Constants
     struct Constants {
         static let APIScheme = "https"
         static let APIHost = "api.flickr.com"
-        static let APIPath = "/services/rest"
+        static let APIPath = "/services/rest/?"
     }
     
-    // MARK: Flickr Parameter Keys
+    // MARK: Flickr Query String Parameter Keys
     struct FlickrParameterKeys {
-        static let Method = "method"
-        static let APIKey = "api_key"
-        static let GalleryID = "gallery_id"
-        static let Extras = "extras"
-        static let Format = "format"
-        static let NoJSONCallback = "nojsoncallback"
-        static let SafeSearch = "safe_search"
-        static let Text = "text"
-        static let BoundingBox = "bbox"
-        static let Page = "page"
+        static let Method = "method="
+        static let APIKey = "api_key="
+        static let GalleryID = "gallery_id="
+        static let Extras = "extras="
+        static let Format = "format="
+        static let NoJSONCallback = "nojsoncallback="
+        static let SafeSearch = "safe_search="
+        static let Text = "text="
+        static let BoundingBox = "bbox="
+        static let Page = "page="
     }
     
-    // MARK: Flickr Parameter Values
+    // MARK: Flickr Query String Parameter Values
     struct FlickrParameterValues {
         static let SearchMethod = "flickr.photos.search"
         static let APIKey = "f586ce4eaedba683f3919ab7a27f2aa9"
@@ -43,7 +45,7 @@ extension FlickrClient {
         static let UseSafeSearch = "1"
     }
     
-    // MARK: Flickr Response Keys
+    // MARK: Flickr HTTP Response Keys
     struct FlickrResponseKeys {
         static let Status = "stat"
         static let Photos = "photos"
@@ -54,7 +56,7 @@ extension FlickrClient {
         static let Total = "total"
     }
     
-    // MARK: Flickr Response Values
+    // MARK: Flickr HTTP Response Values
     struct FlickrResponseValues {
         static let OKStatus = "ok"
     }
