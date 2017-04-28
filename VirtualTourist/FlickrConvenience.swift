@@ -12,7 +12,7 @@ import UIKit
 extension FlickrClient {
     
     // The HTTP response for the photos is a dictionary.
-    func getLocationPhotos(latitude: Double?, longitude: Double?, completionHandlerForPhotos: @escaping (_ success: Bool, _ photo: [UIImage]?, _ error: NSError?) -> Void) {
+    func getLocationPhotos(latitude: Double?, longitude: Double?, completionHandlerForPhotos: @escaping (_ success: Bool, _ photos: [UIImage]?, _ error: NSError?) -> Void) {
         
         let latString = String(describing: latitude)
         let lonString = String(describing: longitude)

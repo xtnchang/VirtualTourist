@@ -16,6 +16,8 @@ class MapViewController: UIViewController {
     
     var coordinate: CLLocationCoordinate2D?
     var annotation: MKPointAnnotation?
+    var latitude: Double?
+    var longitude: Double?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +43,10 @@ class MapViewController: UIViewController {
             self.annotation = MKPointAnnotation()
             self.annotation?.coordinate = self.coordinate!
             self.mapView.addAnnotation(annotation!)
+            
+            // Store the latitude and longitude values for Flickr query string parameters later
+            self.latitude = self.coordinate?.latitude
+            self.longitude = self.coordinate?.longitude
         }
     }
     
