@@ -76,6 +76,8 @@ extension MapViewController: MKMapViewDelegate {
         
         // Pass the coordinate information to the PhotosViewController
         controller.coordinate = self.coordinate
+        controller.latitude = self.latitude
+        controller.longitude = self.longitude
         
         // Deselect the pin so that it's selectable again when we return from PhotosViewController
         self.mapView.deselectAnnotation(self.annotation, animated: true)

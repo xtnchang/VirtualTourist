@@ -75,4 +75,13 @@ class FlickrClient {
         // If there's no error, the completion hooandler is passed the arguments below.
         completionHandlerForParsingJSON(parsedResponse, nil)
     }
+    
+    // MARK: Shared Instance
+    
+    class func sharedInstance() -> FlickrClient {
+        struct Singleton {
+            static var sharedInstance = FlickrClient()
+        }
+        return Singleton.sharedInstance
+    }
 }

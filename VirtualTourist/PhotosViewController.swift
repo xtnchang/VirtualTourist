@@ -17,6 +17,8 @@ class PhotosViewController: UIViewController {
     @IBOutlet weak var barButton: UIBarButtonItem!
     
     var coordinate: CLLocationCoordinate2D?
+    var latitude: Double?
+    var longitude: Double?
     var indexPathArray = [IndexPath]()
     
     override func viewDidLoad() {
@@ -40,6 +42,21 @@ class PhotosViewController: UIViewController {
         self.mapView.setRegion(coordinateRegion, animated: true)
     }
     
+    func loadPhotos() {
+        
+        FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude, longitude: longitude) { (success, photos, error) in
+            
+            DispatchQueue.main.async {
+                
+                if success {
+                    // Load photos in collection view
+                } else {
+                    print("Error loading photos")
+                }
+            }
+            
+        }
+    }
     
     @IBAction func barButtonPressed(_ sender: Any) {
         
