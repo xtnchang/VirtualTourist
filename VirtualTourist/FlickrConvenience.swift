@@ -12,7 +12,7 @@ import UIKit
 extension FlickrClient {
     
     // The HTTP response for the photos is a dictionary.
-    func getLocationPhotos(latitude: Double?, longitude: Double?, completionHandlerForPhotos: @escaping (_ success: Bool, _ photos: [String]?, _ error: NSError?) -> Void) {
+    func getLocationPhotos(latitude: Double?, longitude: Double?, completionHandlerForPhotos: @escaping (_ success: Bool, _ photoURLArray: [String]?, _ error: NSError?) -> Void) {
         
         let latString = String(describing: latitude)
         let lonString = String(describing: longitude)
@@ -52,13 +52,11 @@ extension FlickrClient {
             }
             
             // In order to populate the collection view, we'll need an array of image URLs.
-            
             var photoURLArray = [String]()
             
             for photo in photosArray {
                 
-                if let photoURL = photo[FlickrResponseKeys.MediumURL] as? String
-                {
+                if let photoURL = photo[FlickrResponseKeys.MediumURL] as? String {
                     photoURLArray.append(photoURL)
                 }
             }

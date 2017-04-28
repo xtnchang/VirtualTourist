@@ -15,7 +15,7 @@ class PhotosViewController: UIViewController {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var barButton: UIBarButtonItem!
-    
+   
     var coordinate: CLLocationCoordinate2D?
     var latitude: Double?
     var longitude: Double?
@@ -23,6 +23,7 @@ class PhotosViewController: UIViewController {
     
     override func viewDidLoad() {
         showPin()
+        loadPhotos()
         collectionView.delegate = self
         collectionView.dataSource = self
     }
@@ -44,12 +45,12 @@ class PhotosViewController: UIViewController {
     
     func loadPhotos() {
         
-        FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude, longitude: longitude) { (success, photos, error) in
+        FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude, longitude: longitude) { (success, photoURLArray, error) in
             
             DispatchQueue.main.async {
                 
                 if success {
-                    // Load photos in collection view
+                    print("Load photos in collection view")
                 } else {
                     print("Error loading photos")
                 }
@@ -82,7 +83,7 @@ extension PhotosViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoViewCell
         
         return cell
     }
