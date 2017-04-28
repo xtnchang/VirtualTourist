@@ -10,7 +10,7 @@ import Foundation
 
 extension FlickrClient {
     
-    // Sample URL: https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d592362beec3f98703d88ff5d1d35647&format=json&nojsoncallback=1&auth_token=72157680012118213-ba4752877870d261&api_sig=dcce79813ac936e6ffa88f687efece01
+    // Sample URL: https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=d592362beec3f98703d88ff5d1d35647&lat=37.3230&lon=122.0322&extras=url_m&format=json&nojsoncallback=1&auth_token=72157680012118213-ba4752877870d261&api_sig=6ee37e6fd4510f67a1a1472c875a0330
     
     // MARK: URL Constants
     struct Constants {
@@ -43,7 +43,7 @@ extension FlickrClient {
         static let DisableJSONCallback = "1" /* 1 means "yes" */
         static let GalleryPhotosMethod = "flickr.galleries.getPhotos"
         static let GalleryID = "5704-72157622566655097"
-        static let MediumURL = "url_m"
+        static let MediumURL = "url_m" // includes the photo URL in the response body
         static let UseSafeSearch = "1"
     }
     
