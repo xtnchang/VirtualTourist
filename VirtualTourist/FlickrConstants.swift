@@ -31,6 +31,8 @@ extension FlickrClient {
         static let Text = "text="
         static let BoundingBox = "bbox="
         static let Page = "page="
+        static let Latitude = "lat="
+        static let Longitude = "lon="
     }
     
     // MARK: Flickr Query String Parameter Values
