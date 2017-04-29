@@ -17,6 +17,7 @@ class FlickrClient {
         
         /* 2/3. Build the URL, Configure the request */
         let urlString = Constants.APIScheme + Constants.APIHost + Constants.APIPath + parameters!
+        print(urlString)
         let url = NSURL(string: urlString)
         let request = NSMutableURLRequest(url: url as! URL)
         let session = URLSession.shared
@@ -31,7 +32,7 @@ class FlickrClient {
             
             /* GUARD: Was there an error? */
             guard (error == nil) else {
-                sendError(error: "There was an error with your request: \(error)")
+                sendError(error: "There was an error with your request: \(error?.localizedDescription)")
                 return
             }
             

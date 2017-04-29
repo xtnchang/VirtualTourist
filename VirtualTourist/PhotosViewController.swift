@@ -45,19 +45,19 @@ class PhotosViewController: UIViewController {
     
     func loadPhotos() {
         
-        FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude, longitude: longitude) { (success, photoURLArray, error) in
-            
-            DispatchQueue.main.async {
+        FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude!, longitude: longitude!) { (success, photoDataArray, error) in
                 
-                if success {
-                    print("Load photos in collection view")
-                } else {
-                    print("Error loading photos")
-                }
+            if success {
+                    
+                print("Load photos in collection view")
+                print(photoDataArray ?? 0)
+
+            } else {
+                print("Error loading photos")
             }
-            
         }
     }
+    
     
     @IBAction func barButtonPressed(_ sender: Any) {
         

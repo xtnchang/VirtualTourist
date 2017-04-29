@@ -14,7 +14,7 @@ extension FlickrClient {
     
     // MARK: URL Constants
     struct Constants {
-        static let APIScheme = "https"
+        static let APIScheme = "https://"
         static let APIHost = "api.flickr.com"
         static let APIPath = "/services/rest/?"
     }
@@ -38,7 +38,7 @@ extension FlickrClient {
     // MARK: Flickr Query String Parameter Values
     struct FlickrParameterValues {
         static let SearchMethod = "flickr.photos.search"
-        static let APIKey = "f586ce4eaedba683f3919ab7a27f2aa9"
+        static let APIKey = "b42cff4bc2e5dc3dbae03f49bda70791"
         static let ResponseFormat = "json"
         static let DisableJSONCallback = "1" /* 1 means "yes" */
         static let GalleryPhotosMethod = "flickr.galleries.getPhotos"

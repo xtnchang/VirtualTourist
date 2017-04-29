@@ -12,14 +12,13 @@ import UIKit
 extension FlickrClient {
     
     // The HTTP response for the photos is a dictionary.
-    func getLocationPhotos(latitude: Double?, longitude: Double?, completionHandlerForPhotos: @escaping (_ success: Bool, _ photoURLArray: [String]?, _ error: NSError?) -> Void) {
+    func getLocationPhotos(latitude: Double, longitude: Double, completionHandlerForPhotos: @escaping (_ success: Bool, _ photoDataArray: [Data]?, _ error: NSError?) -> Void) {
         
         let latString = String(describing: latitude)
         let lonString = String(describing: longitude)
         
-        
         // Build the query string parameters to pass into taskForGET.
-        let parameters = FlickrParameterKeys.Method + FlickrParameterValues.SearchMethod + "&" + FlickrParameterKeys.APIKey + FlickrParameterValues.APIKey + "&" + FlickrParameterKeys.Extras + FlickrParameterValues.MediumURL + "&" + FlickrParameterKeys.Format + FlickrParameterValues.ResponseFormat + "&" + FlickrParameterKeys.Latitude + latString + "&" + FlickrParameterKeys.Longitude + lonString
+        let parameters = FlickrParameterKeys.Method + FlickrParameterValues.SearchMethod + "&" + FlickrParameterKeys.APIKey + FlickrParameterValues.APIKey + "&" + FlickrParameterKeys.Latitude + latString + "&" + FlickrParameterKeys.Longitude + lonString + "&" + FlickrParameterKeys.Extras + FlickrParameterValues.MediumURL + "&" + FlickrParameterKeys.Format + FlickrParameterValues.ResponseFormat + "&" + FlickrParameterKeys.NoJSONCallback + FlickrParameterValues.DisableJSONCallback
         
         taskForGETMethod(parameters: parameters) { (parsedResponse, error) in
             
@@ -30,7 +29,7 @@ extension FlickrClient {
             }
             
             guard (error == nil) else {
-                sendError(error: "There was an error with your request: \(error)")
+                sendError(error: "There was an error with your request: \(error?.localizedDescription)")
                 return
             }
             
@@ -46,22 +45,24 @@ extension FlickrClient {
             }
             
             /* GUARD: Are the "photos" and "photo" keys in our result? */
-            guard let photosDictionary = parsedResponse?[FlickrResponseKeys.Photos] as? [String:AnyObject], let photosArray = photosDictionary[FlickrResponseKeys.Photo] as? [[String:AnyObject]] else {
+            guard let photosContainer = parsedResponse?[FlickrResponseKeys.Photos] as? [String:AnyObject], let photosArray = photosContainer[FlickrResponseKeys.Photo] as? [[String:AnyObject]] else {
                 sendError(error: "Cannot find keys '\(FlickrResponseKeys.Photos)' and '\(FlickrResponseKeys.Photo)' in \(parsedResponse)")
                 return
             }
             
-            // In order to populate the collection view, we'll need an array of image URLs.
-            var photoURLArray = [String]()
+            // In order to populate the collection view, we'll need an array of images. First get the URL of each photo, and then convert it to type Data.
+            var photoDataArray = [Data]()
             
             for photo in photosArray {
                 
                 if let photoURL = photo[FlickrResponseKeys.MediumURL] as? String {
-                    photoURLArray.append(photoURL)
+                    let imageURL = URL(string: photoURL)
+                    let imageData = try? Data(contentsOf: imageURL!)
+                    photoDataArray.append(imageData!)
                 }
             }
             
-            completionHandlerForPhotos(true, photoURLArray, nil)
+            completionHandlerForPhotos(true, photoDataArray, nil)
             
         }
     }
