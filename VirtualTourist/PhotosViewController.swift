@@ -84,17 +84,18 @@ extension PhotosViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return 15
+        return 5
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoViewCell
         
-        for photo in photosToLoad {
-            cell.imageView.image = UIImage(data: photo)
-        }
+        // For each cell, load the image corresponding to the cell's indexPath.
+        let cellPhoto = photosToLoad[indexPath.item]
         
+        cell.imageView.image = UIImage(data: cellPhoto)
+
         return cell
     }
     
