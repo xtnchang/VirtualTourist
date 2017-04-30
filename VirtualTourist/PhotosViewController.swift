@@ -19,6 +19,11 @@ class PhotosViewController: UIViewController {
     var coordinate: CLLocationCoordinate2D?
     var latitude: Double?
     var longitude: Double?
+    
+    // Store an array of the Flickr images to load.
+    var photosToLoad = [Data]()
+    
+    // Store an array of cells that the user tapped to be deleted.
     var indexPathArray = [IndexPath]()
     
     override func viewDidLoad() {
@@ -51,6 +56,7 @@ class PhotosViewController: UIViewController {
                     
                 print("Load photos in collection view")
                 print(photoDataArray ?? 0)
+                self.photosToLoad = photoDataArray!
 
             } else {
                 print("Error loading photos")
@@ -84,6 +90,10 @@ extension PhotosViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoViewCell
+        
+        for photo in photosToLoad {
+            cell.imageView.image = UIImage(data: photo)
+        }
         
         return cell
     }
