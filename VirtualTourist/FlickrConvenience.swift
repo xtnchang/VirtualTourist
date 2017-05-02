@@ -12,13 +12,13 @@ import UIKit
 extension FlickrClient {
     
     // The HTTP response for the photos is a dictionary.
-    func getLocationPhotos(latitude: Double, longitude: Double, completionHandlerForPhotos: @escaping (_ success: Bool, _ photoDataArray: [Data]?, _ error: NSError?) -> Void) {
+    func getLocationPhotos(latitude: Double, longitude: Double, completionHandlerForPhotos: @escaping (_ success: Bool, _ photos: [[String : AnyObject]]?, _ error: NSError?) -> Void) {
         
         let latString = String(describing: latitude)
         let lonString = String(describing: longitude)
         
         // Build the query string parameters to pass into taskForGET.
-        let parameters = FlickrParameterKeys.Method + FlickrParameterValues.SearchMethod + "&" + FlickrParameterKeys.APIKey + FlickrParameterValues.APIKey + "&" + FlickrParameterKeys.Latitude + latString + "&" + FlickrParameterKeys.Longitude + lonString + "&" + FlickrParameterKeys.Extras + FlickrParameterValues.MediumURL + "&" + FlickrParameterKeys.Format + FlickrParameterValues.ResponseFormat + "&" + FlickrParameterKeys.NoJSONCallback + FlickrParameterValues.DisableJSONCallback
+        let parameters = FlickrParameterKeys.Method + FlickrParameterValues.SearchMethod + "&" + FlickrParameterKeys.APIKey + FlickrParameterValues.APIKey + "&" + FlickrParameterKeys.Latitude + latString + "&" + FlickrParameterKeys.Longitude + lonString + "&" + FlickrParameterKeys.Extras + FlickrParameterValues.MediumURL + "&" + FlickrParameterKeys.Format + FlickrParameterValues.ResponseFormat + "&" + FlickrParameterKeys.NoJSONCallback + FlickrParameterValues.DisableJSONCallback + "&" + FlickrParameterKeys.PerPage + FlickrParameterValues.PerPage
         
         taskForGETMethod(parameters: parameters) { (parsedResponse, error) in
             
@@ -51,18 +51,18 @@ extension FlickrClient {
             }
             
             // In order to populate the collection view, we'll need an array of images. First get the URL of each photo, and then convert it to type Data.
-            var photoDataArray = [Data]()
+            //var photoDataArray = [Data]()
             
-            for photo in photosArray {
-                
-                if let photoURL = photo[FlickrResponseKeys.MediumURL] as? String {
-                    let imageURL = URL(string: photoURL)
-                    let imageData = try? Data(contentsOf: imageURL!)
-                    photoDataArray.append(imageData!)
-                }
-            }
+//            for photo in photosArray {
+//                
+//                if let photoURL = photo[FlickrResponseKeys.MediumURL] as? String {
+//                    let imageURL = URL(string: photoURL)
+//                    let imageData = try? Data(contentsOf: imageURL!)
+//                    photoDataArray.append(imageData!)
+//                }
+//            }
             
-            completionHandlerForPhotos(true, photoDataArray, nil)
+            completionHandlerForPhotos(true, photosArray, nil)
             
         }
     }

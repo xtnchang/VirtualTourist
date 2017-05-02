@@ -30,6 +30,7 @@ extension FlickrClient {
         static let SafeSearch = "safe_search="
         static let Text = "text="
         static let BoundingBox = "bbox="
+        static let PerPage = "per_page="
         static let Page = "page="
         static let Latitude = "lat="
         static let Longitude = "lon="
@@ -45,6 +46,7 @@ extension FlickrClient {
         static let GalleryID = "5704-72157622566655097"
         static let MediumURL = "url_m" // includes the photo URL in the response body
         static let UseSafeSearch = "1"
+        static let PerPage = "20"
     }
     
     // MARK: Flickr HTTP Response Keys

@@ -20,8 +20,8 @@ class PhotosViewController: UIViewController {
     var latitude: Double?
     var longitude: Double?
     
-    // Store an array of the Flickr images to load.
-    var photosToLoad = [Data]()
+    // Store the data in the "photo" array (from JSON)
+    var photoArray = [[String : AnyObject]]()
     
     // Store an array of cells that the user tapped to be deleted.
     var indexPathArray = [IndexPath]()
@@ -53,10 +53,14 @@ class PhotosViewController: UIViewController {
         FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude!, longitude: longitude!) { (success, photoDataArray, error) in
                 
             if success {
-                    
-                print("Load photos in collection view")
-                print(photoDataArray ?? 0)
-                self.photosToLoad = photoDataArray!
+                
+                if let unwrappedPhotoDataArray = photoDataArray {
+                    self.photoArray = unwrappedPhotoDataArray
+                }
+                
+                DispatchQueue.main.async {
+                   self.collectionView.reloadData()
+                }
 
             } else {
                 print("Error loading photos")
@@ -84,19 +88,53 @@ extension PhotosViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return 5
+        return self.photoArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoViewCell
         
-        // For each cell, load the image corresponding to the cell's indexPath.
-        let cellPhoto = photosToLoad[indexPath.item]
-        
-        cell.imageView.image = UIImage(data: cellPhoto)
+        // For each cell, retrieve the image corresponding to the cell's indexPath.
+        let photoToLoad = photoArray[indexPath.row]
+    
+        // Download the image at the url
+        if let url = photoToLoad["url_m"] as? String {
+            downloadPhotoWith(url: url) { (image, error) in
+                cell.imageView.image = image
+            }
+        }
 
         return cell
+    }
+    
+    // Given a URL, get the UIImage to load in the collection view cell
+    func downloadPhotoWith(url: String, completionHandlerForDownload: @escaping (_ image: UIImage?, _ error: Error?) -> Void) {
+        
+        let session = URLSession.shared
+        
+        // Convert the url string to URL so that it can be passed into dataTask(with url:)
+        guard let photoURL = URL(string: url) else {
+            completionHandlerForDownload(nil, nil)
+            return
+        }
+        
+        let task = session.dataTask(with: photoURL) { (data, response, error) in
+            
+            guard let data = data else {
+                completionHandlerForDownload(nil, error)
+                return
+            }
+            
+            guard let image = UIImage(data: data) else {
+                completionHandlerForDownload(nil, error)
+                return
+            }
+            
+            completionHandlerForDownload(image, nil)
+        }
+        
+        task.resume()
     }
     
 }
