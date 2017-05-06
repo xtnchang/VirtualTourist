@@ -50,17 +50,7 @@ extension FlickrClient {
                 return
             }
             
-            // In order to populate the collection view, we'll need an array of images. First get the URL of each photo, and then convert it to type Data.
-            //var photoDataArray = [Data]()
-            
-//            for photo in photosArray {
-//                
-//                if let photoURL = photo[FlickrResponseKeys.MediumURL] as? String {
-//                    let imageURL = URL(string: photoURL)
-//                    let imageData = try? Data(contentsOf: imageURL!)
-//                    photoDataArray.append(imageData!)
-//                }
-//            }
+            // In this completion handler, we just retrieve the photosArray (image metadata) rather than downloading the actual images themselves (type Data), because that is very resource intensive and causes the images to load very slowly.
             
             completionHandlerForPhotos(true, photosArray, nil)
             
