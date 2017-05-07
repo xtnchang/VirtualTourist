@@ -24,6 +24,7 @@
 		389470291EBEA01B003E0435 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389470251EBEA01B003E0435 /* Photo+CoreDataProperties.swift */; };
 		3894702A1EBEA01B003E0435 /* Pin+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389470261EBEA01B003E0435 /* Pin+CoreDataClass.swift */; };
 		3894702B1EBEA01B003E0435 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389470271EBEA01B003E0435 /* Pin+CoreDataProperties.swift */; };
+		3894702D1EBEA3EC003E0435 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3894702C1EBEA3EC003E0435 /* CoreDataStack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		389470251EBEA01B003E0435 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		389470261EBEA01B003E0435 /* Pin+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataClass.swift"; sourceTree = "<group>"; };
 		389470271EBEA01B003E0435 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		3894702C1EBEA3EC003E0435 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +180,7 @@
 		3894700F1EBE9A64003E0435 /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
+				3894702C1EBEA3EC003E0435 /* CoreDataStack.swift */,
 				389470241EBEA01B003E0435 /* Photo+CoreDataClass.swift */,
 				389470251EBEA01B003E0435 /* Photo+CoreDataProperties.swift */,
 				389470261EBEA01B003E0435 /* Pin+CoreDataClass.swift */,
@@ -328,6 +331,7 @@
 				3894702A1EBEA01B003E0435 /* Pin+CoreDataClass.swift in Sources */,
 				38253C9A1EAE49C000B0B5C5 /* AppDelegate.swift in Sources */,
 				3894700D1EBE9900003E0435 /* Model.xcdatamodeld in Sources */,
+				3894702D1EBEA3EC003E0435 /* CoreDataStack.swift in Sources */,
 				38253CCE1EAE5F5800B0B5C5 /* FlickrConvenience.swift in Sources */,
 				38253CD21EAE5FB600B0B5C5 /* PhotosViewController.swift in Sources */,
 				389470281EBEA01B003E0435 /* Photo+CoreDataClass.swift in Sources */,
