@@ -27,8 +27,15 @@ class PhotosViewController: UIViewController {
     // Store an array of cells that the user tapped to be deleted.
     var indexPathArray = [IndexPath]()
     
-    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>?
-    
+    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? {
+        didSet {
+            // Whenever the fetchedResultsController gets a new fetchRequest, we reload the collection view (?)
+            // The protocol is NSFetchedResultsControllerDelegate, which PhotosViewController conforms to (see extension).
+            fetchedResultsController?.delegate = self
+            collectionView.reloadData()
+        }
+    }
+        
     override func viewDidLoad() {
         showPin()
         loadPhotos()
@@ -85,6 +92,7 @@ class PhotosViewController: UIViewController {
         if barButton.title == "Remove selected pictures" {
             print("remove selected cells")
             print(self.indexPathArray)
+            // How to delete cells?
             // self.collectionView.deleteItems(at: self.indexPathArray)
             self.barButton.title = "Refresh collection"
         } else {
@@ -165,5 +173,11 @@ extension PhotosViewController: UICollectionViewDelegate {
         
         self.indexPathArray.append(indexPath)
     }
+    
+}
+
+// MARK: NSFetchedResultsControllerDelegate
+extension PhotosViewController: NSFetchedResultsControllerDelegate {
+    
     
 }
