@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import MapKit
+import CoreData
 
 class PhotosViewController: UIViewController {
 
@@ -25,6 +26,8 @@ class PhotosViewController: UIViewController {
     
     // Store an array of cells that the user tapped to be deleted.
     var indexPathArray = [IndexPath]()
+    
+    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>?
     
     override func viewDidLoad() {
         showPin()
@@ -66,6 +69,14 @@ class PhotosViewController: UIViewController {
                 print("Error loading photos")
             }
         }
+    }
+    
+    func fetchImages() {
+        
+        // Initialize a fetchRequest to be used whenever objects (photos) are operated on (in this case, deleted by the user).
+        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
+        
+        
     }
     
     
