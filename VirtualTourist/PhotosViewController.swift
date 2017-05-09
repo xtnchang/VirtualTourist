@@ -29,7 +29,7 @@ class PhotosViewController: UIViewController {
     
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? {
         didSet {
-            // Whenever the fetchedResultsController gets a new fetchRequest, we reload the collection view (?)
+            // Whenever the fetchedResultsController is initialized with a new fetchRequest, we reload the collection view.
             // The protocol is NSFetchedResultsControllerDelegate, which PhotosViewController conforms to (see extension).
             fetchedResultsController?.delegate = self
             collectionView.reloadData()

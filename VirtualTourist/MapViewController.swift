@@ -20,10 +20,29 @@ class MapViewController: UIViewController {
     var latitude: Double?
     var longitude: Double?
     
+    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? {
+        didSet {
+            // Whenever the fetchedResultsController is initialized with a new fetchRequest, we reload the map view?
+            // The protocol is NSFetchedResultsControllerDelegate, which PhotosViewController conforms to (see extension).
+            fetchedResultsController?.delegate = self
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
         activateGestureRecognizer()
+        
+        // Get the stack
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let stack = delegate.stack
+        
+        // Create a fetchrequest
+        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        fr.sortDescriptors = [NSSortDescriptor(key: "imageData", ascending: true)]
+        
+        // Create the FetchedResultsController
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
     }
     
     // http://stackoverflow.com/questions/30858360/adding-a-pin-annotation-to-a-map-view-on-a-long-press-in-swift
@@ -86,7 +105,11 @@ extension MapViewController: MKMapViewDelegate {
 
 }
 
-
+// MARK: NSFetchedResultsControllerDelegate
+extension MapViewController: NSFetchedResultsControllerDelegate {
+    
+    
+}
 
 
 
