@@ -108,7 +108,6 @@ extension MapViewController: MKMapViewDelegate {
 // MARK: NSFetchedResultsControllerDelegate
 extension MapViewController: NSFetchedResultsControllerDelegate {
     
-    
 }
 
 

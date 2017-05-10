@@ -179,5 +179,19 @@ extension PhotosViewController: UICollectionViewDelegate {
 // MARK: NSFetchedResultsControllerDelegate
 extension PhotosViewController: NSFetchedResultsControllerDelegate {
     
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        
+        // Do something
+    }
     
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        
+        // Do something
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        
+        // Do something
+    }
+
 }
