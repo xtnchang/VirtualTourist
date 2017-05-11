@@ -28,18 +28,17 @@ class MapViewController: UIViewController {
         }
     }
     
+    // Get the stack
+    let stack = (UIApplication.shared.delegate as! AppDelegate).stack
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
         activateGestureRecognizer()
         
-        // Get the stack
-        let delegate = UIApplication.shared.delegate as! AppDelegate
-        let stack = delegate.stack
-        
         // Create a fetchrequest
         let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
-        fr.sortDescriptors = [NSSortDescriptor(key: "imageData", ascending: true)]
+        fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true)]
         
         // Create the FetchedResultsController
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
@@ -60,13 +59,25 @@ class MapViewController: UIViewController {
             self.coordinate = mapView.convert(pressedLocation, toCoordinateFrom: mapView)
             
             // Add the CLLocationCoordinate2D to the map.
-            self.annotation = MKPointAnnotation()
-            self.annotation?.coordinate = self.coordinate!
-            self.mapView.addAnnotation(annotation!)
+//            self.annotation = MKPointAnnotation()
+//            self.annotation?.coordinate = self.coordinate!
+//            self.mapView.addAnnotation(annotation!)
+            print("adding pin")
             
             // Store the latitude and longitude values for Flickr query string parameters later
             self.latitude = self.coordinate?.latitude
             self.longitude = self.coordinate?.longitude
+            
+            // Instantiate a Pin object
+            let newPin = Pin(latitude: self.latitude!, longitude: self.longitude!, context: stack.context)
+            
+            // Save the pin
+            do {
+                
+            try stack.context.save()
+            } catch {
+                print("error")
+            }
         }
     }
     
@@ -108,6 +119,29 @@ extension MapViewController: MKMapViewDelegate {
 // MARK: NSFetchedResultsControllerDelegate
 extension MapViewController: NSFetchedResultsControllerDelegate {
     
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        
+        print("didChange anObject")
+        switch type {
+            
+        case .delete:
+            // do something on main thread
+            print("delete")
+        case .insert:
+            DispatchQueue.main.async {
+                // Add the CLLocationCoordinate2D to the map.
+                self.annotation = MKPointAnnotation()
+                self.annotation?.coordinate = self.coordinate!
+                self.mapView.addAnnotation(self.annotation!)
+            }
+            
+        default:
+            print("Default")
+        }
+        
+        
+        
+    }
 }
 
 

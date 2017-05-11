@@ -93,7 +93,12 @@ class PhotosViewController: UIViewController {
             print("remove selected cells")
             print(self.indexPathArray)
             // How to delete cells?
-            // self.collectionView.deleteItems(at: self.indexPathArray)
+//            for item in self.indexPathArray {
+//                self.collectionView.deleteItems(at: [item])
+//            }
+            
+            // Don't delete the cells manually yourself. Delete the data (via Core Data), then refresh the collection view. 
+            self.collectionView.deleteItems(at: self.indexPathArray)
             self.barButton.title = "Refresh collection"
         } else {
             print("refresh collection")
