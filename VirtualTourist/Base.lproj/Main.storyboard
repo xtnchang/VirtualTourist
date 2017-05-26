@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1421" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="5OX-ho-RLY">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="5OX-ho-RLY">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -53,6 +53,7 @@
                     <navigationItem key="navigationItem" title="Virtual Tourist" id="2D0-Nz-bTy" userLabel="Virtual Tourist"/>
                     <connections>
                         <outlet property="mapView" destination="bVz-Dm-Tpp" id="Bvl-tG-D2F"/>
+                        <segue destination="VaO-bj-EET" kind="show" identifier="displayPhotos" id="WWA-cn-2Kz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Wk-9L-Xj3" userLabel="First Responder" sceneMemberID="firstResponder"/>

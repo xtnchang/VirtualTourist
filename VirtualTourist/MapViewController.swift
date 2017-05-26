@@ -19,11 +19,12 @@ class MapViewController: UIViewController {
     var annotation: MKPointAnnotation?
     var latitude: Double?
     var longitude: Double?
+    var pin: Pin?
     
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? {
         didSet {
             // Whenever the fetchedResultsController is initialized with a new fetchRequest, we reload the map view?
-            // The protocol is NSFetchedResultsControllerDelegate, which PhotosViewController conforms to (see extension).
+            // The protocol is NSFetchedResultsControllerDelegate, which MapViewController conforms to (see extension).
             fetchedResultsController?.delegate = self
         }
     }
@@ -36,7 +37,7 @@ class MapViewController: UIViewController {
         mapView.delegate = self
         activateGestureRecognizer()
         
-        // Create a fetchrequest
+        // Create a fetch request
         let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
         fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true)]
         
@@ -59,9 +60,10 @@ class MapViewController: UIViewController {
             self.coordinate = mapView.convert(pressedLocation, toCoordinateFrom: mapView)
             
             // Add the CLLocationCoordinate2D to the map.
-//            self.annotation = MKPointAnnotation()
-//            self.annotation?.coordinate = self.coordinate!
-//            self.mapView.addAnnotation(annotation!)
+            self.annotation = MKPointAnnotation()
+            self.annotation?.coordinate = self.coordinate!
+            self.mapView.addAnnotation(annotation!)
+            
             print("adding pin")
             
             // Store the latitude and longitude values for Flickr query string parameters later
@@ -74,7 +76,8 @@ class MapViewController: UIViewController {
             // Save the pin
             do {
                 
-            try stack.context.save()
+                // Does this save it to the database, or do I need to do something with the persistent store?
+                try stack.context.save()
             } catch {
                 print("error")
             }
@@ -91,6 +94,38 @@ class MapViewController: UIViewController {
         mapView.addGestureRecognizer(longPress)
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+        
+        if segue.identifier! == "displayPhotos" {
+            
+            if let photosVC = segue.destination as? PhotosViewController {
+                
+                // Create a fetch request to fetch the photos for this pin.
+                let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photos")
+                
+                fr.sortDescriptors = [NSSortDescriptor(key: "imageData", ascending: true)]
+                
+                // Use the predicate to indicate that you only want to display the photos for this pin. (what happens if you don't specify a predicate?)
+                let pred = NSPredicate(format: "", argumentArray: [])
+                
+                fr.predicate = pred
+                
+                // How do I specify which photos I want to inject/display?
+                let photoArray = [["??":"??"]]
+                
+                // Create FetchedResultsController
+                let fc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: "humanReadableAge", cacheName: nil)
+                
+                // Inject it into the photosVC
+                photosVC.fetchedResultsController = fc
+                
+                // Inject the photos too!
+                photosVC.photoArray = photoArray as [[String : AnyObject]]
+            }
+        }
+    }
 }
 
 // MARK: MKMapViewDelegate
@@ -119,31 +154,26 @@ extension MapViewController: MKMapViewDelegate {
 // MARK: NSFetchedResultsControllerDelegate
 extension MapViewController: NSFetchedResultsControllerDelegate {
     
+    // How is didChange:at:indexPath notified that an insert or delete has occurred? Is NSFetchedResultsChangeType only triggered when the Core Data database is updated?
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         print("didChange anObject")
+        
         switch type {
             
-        case .delete:
-            // do something on main thread
-            print("delete")
-        case .insert:
+        case NSFetchedResultsChangeType.insert:
             DispatchQueue.main.async {
                 // Add the CLLocationCoordinate2D to the map.
                 self.annotation = MKPointAnnotation()
                 self.annotation?.coordinate = self.coordinate!
                 self.mapView.addAnnotation(self.annotation!)
             }
+        case NSFetchedResultsChangeType.delete:
+            // do something on main thread
+            print("delete")
             
         default:
             print("Default")
-        }
-        
-        
-        
+        }        
     }
 }
-
-
-
-

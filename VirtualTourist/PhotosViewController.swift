@@ -121,6 +121,7 @@ extension PhotosViewController: UICollectionViewDataSource {
         
         // For each cell, retrieve the image corresponding to the cell's indexPath.
         let photoToLoad = photoArray[indexPath.row]
+        // let photoToLoad = fetchedResultsController!.object(at: indexPath) as! PhotoViewCell
     
         // Download the image at the url
         if let url = photoToLoad["url_m"] as? String {
@@ -132,7 +133,7 @@ extension PhotosViewController: UICollectionViewDataSource {
         return cell
     }
     
-    // Given a URL, get the UIImage to load in the collection view cell
+    // Helper method: given a URL, get the UIImage to load in the collection view cell
     func downloadPhotoWith(url: String, completionHandlerForDownload: @escaping (_ image: UIImage?, _ error: Error?) -> Void) {
         
         let session = URLSession.shared
