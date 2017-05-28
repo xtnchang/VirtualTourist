@@ -29,18 +29,33 @@ class PhotosViewController: UIViewController {
     
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? {
         didSet {
-            // Whenever the fetchedResultsController is initialized with a new fetchRequest, we reload the collection view.
+            
             // The protocol is NSFetchedResultsControllerDelegate, which PhotosViewController conforms to (see extension).
             fetchedResultsController?.delegate = self
+            
+            // Whenever the frc changes (i.e. new fetch request passed in), we fetch the photos.
+            fetchPhotos()
+            
+            // Whenever performFetch is called on the fetchedResultsController (as it is in fetchPhotos()), we reload the collection view.
             collectionView.reloadData()
         }
     }
-        
+    
+    // Get the stack
+    let stack = (UIApplication.shared.delegate as! AppDelegate).stack
+    
     override func viewDidLoad() {
         showPin()
         loadPhotos()
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+        // Create a fetch request
+        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
+        fr.sortDescriptors = [NSSortDescriptor(key: "imageData", ascending: true)]
+        
+        // Create the FetchedResultsController
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
     }
     
     func showPin() {
@@ -78,12 +93,16 @@ class PhotosViewController: UIViewController {
         }
     }
     
-    func fetchImages() {
+    // Display the images specified by the fetch request and fetchedResultsController in viewDidLoad.
+    func fetchPhotos() {
         
-        // Initialize a fetchRequest to be used whenever objects (photos) are operated on (in this case, deleted by the user).
-        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
-        
-        
+        if let frc = fetchedResultsController {
+            do {
+                try frc.performFetch()
+            } catch let error as NSError {
+                print("Error while trying to perform a search: \n\(error)\n\(fetchedResultsController)")
+            }
+        }
     }
     
     
