@@ -58,7 +58,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Wk-9L-Xj3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="732" y="62"/>
+            <point key="canvasLocation" x="732" y="61.619190404797607"/>
         </scene>
         <!--PhotosViewController Scene-->
         <scene sceneID="btD-mv-1dF">
@@ -73,13 +73,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="2Bl-5y-qWJ">
-                                <rect key="frame" x="0.0" y="59" width="375" height="183"/>
+                                <rect key="frame" x="0.0" y="103" width="375" height="183"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="183" id="qwH-cd-oHm"/>
                                 </constraints>
                             </mapView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="GfE-TI-Xdx">
-                                <rect key="frame" x="16" y="242" width="343" height="425"/>
+                                <rect key="frame" x="16" y="286" width="343" height="381"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="waD-4f-zje">
                                     <size key="itemSize" width="50" height="50"/>

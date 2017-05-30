@@ -21,7 +21,7 @@ class PhotosViewController: UIViewController {
     var latitude: Double?
     var longitude: Double?
     
-    // Store the data in the "photo" array (from JSON)
+    // Store the data in the "photo" array (from JSON). Populated in loadPhotos()
     var photoArray = [[String : AnyObject]]()
     
     // Store an array of cells that the user tapped to be deleted.
@@ -220,7 +220,20 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
-        // Do something
+        print("didChange anObject")
+        
+        switch type {
+            
+        case NSFetchedResultsChangeType.insert:
+            print("insert")
+
+        case NSFetchedResultsChangeType.delete:
+            // do something on main thread
+            print("delete")
+            
+        default:
+            print("Default")
+        }
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {

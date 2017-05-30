@@ -21,13 +21,7 @@ class MapViewController: UIViewController {
     var longitude: Double?
     var pin: Pin?
     
-    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? {
-        didSet {
-            // Whenever the fetchedResultsController is initialized with a new fetchRequest, we reload the map view?
-            // The protocol is NSFetchedResultsControllerDelegate, which MapViewController conforms to (see extension).
-            fetchedResultsController?.delegate = self
-        }
-    }
+    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? 
     
     // Get the stack
     let stack = (UIApplication.shared.delegate as! AppDelegate).stack
@@ -138,7 +132,7 @@ extension MapViewController: MKMapViewDelegate {
         
         // To stay in the navigation stack, use push instead of present.
         // http://stackoverflow.com/questions/24038215/how-to-navigate-from-one-view-controller-to-another-using-swift
-        self.navigationController?.pushViewController(controller, animated: true)
+        self.navigationController?.show(controller, sender: navigationController)
         
         // Pass the coordinate information to the PhotosViewController
         controller.coordinate = self.coordinate
@@ -149,31 +143,4 @@ extension MapViewController: MKMapViewDelegate {
         self.mapView.deselectAnnotation(self.annotation, animated: true)
     }
 
-}
-
-// MARK: NSFetchedResultsControllerDelegate
-extension MapViewController: NSFetchedResultsControllerDelegate {
-    
-    // How is didChange:at:indexPath notified that an insert or delete has occurred? Is NSFetchedResultsChangeType only triggered when the Core Data database is updated?
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        
-        print("didChange anObject")
-        
-        switch type {
-            
-        case NSFetchedResultsChangeType.insert:
-            DispatchQueue.main.async {
-                // Add the CLLocationCoordinate2D to the map.
-                self.annotation = MKPointAnnotation()
-                self.annotation?.coordinate = self.coordinate!
-                self.mapView.addAnnotation(self.annotation!)
-            }
-        case NSFetchedResultsChangeType.delete:
-            // do something on main thread
-            print("delete")
-            
-        default:
-            print("Default")
-        }        
-    }
 }
