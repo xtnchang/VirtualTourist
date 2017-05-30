@@ -105,7 +105,7 @@ class PhotosViewController: UIViewController {
         }
     }
     
-    // Delete the photos selected by the user     
+    // Delete the photos selected by the user. This method deletes the photos from the database, but not from the UI.
     func deleteSelectedPhotos() {
         
         // Delete the photos corresponding to the indexes stored in self.indexPathArray (populated in didSelectItemAt)
@@ -122,13 +122,11 @@ class PhotosViewController: UIViewController {
         if barButton.title == "Remove selected pictures" {
             print("remove selected cells")
             print(self.indexPathArray)
-            // How to delete cells?
-//            for item in self.indexPathArray {
-//                self.collectionView.deleteItems(at: [item])
-//            }
             
-            // Don't delete the cells manually yourself. Delete the data (via Core Data), then refresh the collection view. 
-            self.collectionView.deleteItems(at: self.indexPathArray)
+            // How to delete cells? Don't delete the cells manually yourself. First delete the data (via Core Data), then refresh the collection view.
+            
+            // self.collectionView.deleteItems(at: self.indexPathArray)
+            
             self.barButton.title = "Refresh collection"
         } else {
             print("refresh collection")
