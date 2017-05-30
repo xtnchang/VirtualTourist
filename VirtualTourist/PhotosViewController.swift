@@ -105,6 +105,17 @@ class PhotosViewController: UIViewController {
         }
     }
     
+    // Delete the photos selected by the user     
+    func deleteSelectedPhotos() {
+        
+        // Delete the photos corresponding to the indexes stored in self.indexPathArray (populated in didSelectItemAt)
+        for indexPath in indexPathArray {
+            stack.context.delete(fetchedResultsController?.object(at: indexPath as IndexPath) as! Photo)
+        }
+        
+        // Do I need to save the context?
+    }
+    
     
     @IBAction func barButtonPressed(_ sender: Any) {
         
