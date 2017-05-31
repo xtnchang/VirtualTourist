@@ -130,8 +130,6 @@ extension MapViewController: MKMapViewDelegate {
         
         let controller = self.storyboard?.instantiateViewController(withIdentifier: "PhotosViewController") as! PhotosViewController
         
-        // To stay in the navigation stack, use push instead of present.
-        // http://stackoverflow.com/questions/24038215/how-to-navigate-from-one-view-controller-to-another-using-swift
         self.navigationController?.show(controller, sender: navigationController)
         
         // Pass the coordinate information to the PhotosViewController
