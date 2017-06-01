@@ -94,20 +94,6 @@ class MapViewController: UIViewController {
         // https://developer.apple.com/reference/uikit/uiview/1622496-addgesturerecognizer
         mapView.addGestureRecognizer(longPress)
     }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        
-        if segue.identifier! == "displayPhotos" {
-            
-            if let photosVC = segue.destination as? PhotosViewController {
-                
-                // Pass the pin information to the next view controller
-                photosVC.tappedPin = self.tappedPin
-            }
-        }
-    }
 }
 
 // MARK: MKMapViewDelegate
