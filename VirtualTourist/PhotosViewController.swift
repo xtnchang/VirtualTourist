@@ -17,6 +17,7 @@ class PhotosViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var barButton: UIBarButtonItem!
    
+    var tappedPin: Pin?
     var coordinate: CLLocationCoordinate2D?
     var latitude: Double?
     var longitude: Double?
@@ -53,6 +54,9 @@ class PhotosViewController: UIViewController {
         // Create a fetch request
         let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
         fr.sortDescriptors = [NSSortDescriptor(key: "imageData", ascending: true)]
+        
+        // Specify that we only want the photos associated with the tapped pin
+        // fr.predicate = NSPredicate(format: "pin = %@", pin!)
         
         // Create the FetchedResultsController
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)

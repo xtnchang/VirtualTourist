@@ -19,7 +19,7 @@ class MapViewController: UIViewController {
     var annotation: MKPointAnnotation?
     var latitude: Double?
     var longitude: Double?
-    var pin: Pin?
+    var tappedPin: Pin?
     
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? 
     
@@ -29,21 +29,23 @@ class MapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
+        
+        // Enable user to add a pin
         activateGestureRecognizer()
         
         // Create a fetch request
         let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
         fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true)]
         
+        // Fetch the Pin objects in the context.
         do {
-            var pinsArray = try fr.execute()
-            print(pinsArray.count)
+            let pinsArray = try stack.context.fetch(fr)
+            print(pinsArray)
         } catch {
             print(error.localizedDescription)
         }
         
-        // Create the FetchedResultsController
-//        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        // Don't need a fetchedResultsController for map view
     }
     
     // http://stackoverflow.com/questions/30858360/adding-a-pin-annotation-to-a-map-view-on-a-long-press-in-swift
@@ -72,12 +74,10 @@ class MapViewController: UIViewController {
             self.longitude = self.coordinate?.longitude
             
             // Instantiate a Pin object
-            let newPin = Pin(latitude: self.latitude!, longitude: self.longitude!, context: stack.context)
+            let pin = Pin(latitude: self.latitude!, longitude: self.longitude!, context: stack.context)
             
             // Save the pin
             do {
-                
-                // Does this save it to the database, or do I need to do something with the persistent store?
                 try stack.context.save()
             } catch {
                 print("error")
@@ -103,27 +103,8 @@ class MapViewController: UIViewController {
             
             if let photosVC = segue.destination as? PhotosViewController {
                 
-                // Create a fetch request to fetch the photos for this pin.
-                let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
-                
-                fr.sortDescriptors = [NSSortDescriptor(key: "imageData", ascending: true)]
-                
-                // Use the predicate to indicate that you only want to display the photos for this pin. Is the predicate format the relationship name?
-                let pred = NSPredicate(format: "pin = %@", argumentArray: [])
-                
-                fr.predicate = pred
-                
-                // How do I specify which photos I want to inject/display?
-                let photoArray = [["??":"??"]]
-                
-                // Create a fetchedResultsController for PhotosVC. Do I need to do this if I already create a fetchedResultsController in PhotosVC's viewDidLoad?
-                let fc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: "humanReadableAge", cacheName: nil)
-                
-                // Inject it into the photosVC
-                photosVC.fetchedResultsController = fc
-                
-                // Inject the photos too!
-                photosVC.photoArray = photoArray as [[String : AnyObject]]
+                // Pass the pin information to the next view controller
+                photosVC.tappedPin = self.tappedPin
             }
         }
     }
@@ -139,10 +120,15 @@ extension MapViewController: MKMapViewDelegate {
         
         self.navigationController?.show(controller, sender: navigationController)
         
-        // Pass the coordinate information to the PhotosViewController
-        controller.coordinate = self.coordinate
-        controller.latitude = self.latitude
-        controller.longitude = self.longitude
+        // Pass the tapped pin coordinates to the PhotosViewController
+        controller.coordinate = view.annotation?.coordinate
+        controller.latitude = view.annotation?.coordinate.latitude
+        controller.longitude = view.annotation?.coordinate.longitude
+
+        
+        // Pass the tapped pin object to the PhotosViewController
+        self.tappedPin = Pin(latitude: (view.annotation?.coordinate.latitude)!, longitude: (view.annotation?.coordinate.longitude)!, context: stack.context)
+        controller.tappedPin = self.tappedPin
         
         // Deselect the pin so that it's selectable again when we return from PhotosViewController
         self.mapView.deselectAnnotation(self.annotation, animated: true)
