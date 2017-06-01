@@ -97,19 +97,19 @@ class MapViewController: UIViewController {
             if let photosVC = segue.destination as? PhotosViewController {
                 
                 // Create a fetch request to fetch the photos for this pin.
-                let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photos")
+                let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
                 
                 fr.sortDescriptors = [NSSortDescriptor(key: "imageData", ascending: true)]
                 
-                // Use the predicate to indicate that you only want to display the photos for this pin. (what happens if you don't specify a predicate?)
-                let pred = NSPredicate(format: "", argumentArray: [])
+                // Use the predicate to indicate that you only want to display the photos for this pin. Is the predicate format the relationship name?
+                let pred = NSPredicate(format: "pin = %@", argumentArray: [])
                 
                 fr.predicate = pred
                 
                 // How do I specify which photos I want to inject/display?
                 let photoArray = [["??":"??"]]
                 
-                // Create FetchedResultsController
+                // Create a fetchedResultsController for PhotosVC. Do I need to do this if I already create a fetchedResultsController in PhotosVC's viewDidLoad?
                 let fc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: "humanReadableAge", cacheName: nil)
                 
                 // Inject it into the photosVC
