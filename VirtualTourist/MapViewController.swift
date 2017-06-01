@@ -33,19 +33,8 @@ class MapViewController: UIViewController {
         // Enable user to add a pin
         activateGestureRecognizer()
         
-        // Create a fetch request
-        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
-        fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true)]
-        
-        // Fetch the Pin objects in the context.
-        do {
-            let pinsArray = try stack.context.fetch(fr)
-            print(pinsArray)
-        } catch {
-            print(error.localizedDescription)
-        }
-        
-        // Don't need a fetchedResultsController for map view
+        // Load all the pins stored in the database
+        loadPins()
     }
     
     // http://stackoverflow.com/questions/30858360/adding-a-pin-annotation-to-a-map-view-on-a-long-press-in-swift
@@ -93,6 +82,32 @@ class MapViewController: UIViewController {
         
         // https://developer.apple.com/reference/uikit/uiview/1622496-addgesturerecognizer
         mapView.addGestureRecognizer(longPress)
+    }
+    
+    // Load all the pins that were previously created (persistence)
+    func loadPins() {
+        
+        var pinsArray: [Pin]?
+        var annotationsArray = [MKPointAnnotation]()
+        
+        // Create a fetch request
+        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Pin")
+        fr.sortDescriptors = [NSSortDescriptor(key: "latitude", ascending: true)]
+        
+        // Fetch the Pin objects in the context.
+        do {
+            pinsArray = try stack.context.fetch(fr) as? [Pin]
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        for pin in pinsArray! {
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(pin.latitude),longitude: CLLocationDegrees(pin.longitude))
+            annotationsArray.append(annotation)
+        }
+        
+        mapView.addAnnotations(annotationsArray)
     }
 }
 
