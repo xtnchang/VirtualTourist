@@ -125,7 +125,6 @@ extension MapViewController: MKMapViewDelegate {
         controller.coordinate = view.annotation?.coordinate
         controller.latitude = view.annotation?.coordinate.latitude
         controller.longitude = view.annotation?.coordinate.longitude
-
         
         // Pass the tapped pin object to the PhotosViewController
         self.tappedPin = Pin(latitude: (view.annotation?.coordinate.latitude)!, longitude: (view.annotation?.coordinate.longitude)!, context: stack.context)
