@@ -55,8 +55,8 @@ class PhotosViewController: UIViewController {
         let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
         fr.sortDescriptors = [NSSortDescriptor(key: "imageData", ascending: true)]
         
-        // Specify that we only want the photos associated with the tapped pin
-        // fr.predicate = NSPredicate(format: "pin = %@", pin!)
+        // Specify that we only want the photos associated with the tapped pin. (pin is the relationships)
+        fr.predicate = NSPredicate(format: "pin = %@", tappedPin!)
         
         // Create the FetchedResultsController
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
@@ -90,6 +90,8 @@ class PhotosViewController: UIViewController {
                 DispatchQueue.main.async {
                    self.collectionView.reloadData()
                 }
+                
+                // Need to save photos to Core Data
 
             } else {
                 print("Error loading photos")
@@ -114,21 +116,22 @@ class PhotosViewController: UIViewController {
         
         // Delete the photos corresponding to the indexes stored in self.indexPathArray (populated in didSelectItemAt)
         for indexPath in indexPathArray {
-            stack.context.delete(fetchedResultsController?.object(at: indexPath as IndexPath) as! Photo)
+            //stack.context.delete(fetchedResultsController?.object(at: indexPath as IndexPath) as! Photo)
+            photoArray.remove(at: indexPath.row)
         }
         
-        // Do I need to save the context?
+        collectionView.reloadData()
     }
     
     
     @IBAction func barButtonPressed(_ sender: Any) {
         
         if barButton.title == "Remove selected pictures" {
-            print("remove these cells: \(self.indexPathArray)")
-            //print(self.indexPathArray)
+            // print("remove these cells: \(self.indexPathArray)")
+            print(self.indexPathArray)
             
             // How to delete cells? Don't delete the cells manually yourself. First delete the data (via Core Data), then refresh the collection view.
-//            deleteSelectedPhotos()
+            deleteSelectedPhotos()
 //            self.collectionView.deleteItems(at: self.indexPathArray)
             
             self.barButton.title = "Refresh collection"
@@ -207,7 +210,7 @@ extension PhotosViewController: UICollectionViewDelegate {
         let cell = collectionView.cellForItem(at: indexPath as IndexPath)
         cell?.alpha = 0.5
         
-        // Whenever user selects one or more cells, the bar button changes to Remove selecetd pictures
+        // Whenever user selects one or more cells, the bar button changes to Remove seleceted pictures
         self.barButton.title = "Remove selected pictures"
         
         self.indexPathArray.append(indexPath)
