@@ -27,6 +27,8 @@ class PhotosViewController: UIViewController {
     
     // Store an array of cells that the user tapped to be deleted.
     var indexPathArray = [IndexPath]()
+    var insertedIndexPaths: [NSIndexPath]!
+    var deletedIndexPaths: [NSIndexPath]!
     
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? {
         didSet {
@@ -128,8 +130,6 @@ class PhotosViewController: UIViewController {
     @IBAction func barButtonPressed(_ sender: Any) {
         
         if barButton.title == "Remove selected pictures" {
-            // print("remove these cells: \(self.indexPathArray)")
-            print(self.indexPathArray)
 
             deleteSelectedPhotos()
             
@@ -222,7 +222,8 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
-        // Do something
+        insertedIndexPaths = [NSIndexPath]()
+        deletedIndexPaths = [NSIndexPath]()
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
@@ -232,14 +233,13 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
         switch type {
             
         case NSFetchedResultsChangeType.insert:
-            print("insert")
-
+            insertedIndexPaths.append(newIndexPath! as NSIndexPath)
+            
         case NSFetchedResultsChangeType.delete:
-            // do something on main thread
-            print("delete")
+            deletedIndexPaths.append(newIndexPath! as NSIndexPath)
             
         default:
-            print("Default")
+            break
         }
     }
     
