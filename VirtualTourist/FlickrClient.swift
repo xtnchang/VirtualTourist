@@ -13,7 +13,7 @@ class FlickrClient {
     
     // MARK: GET
     // We need to pass in the query string parameters (which include the method)
-    func taskForGETMethod(parameters: String?, completionHandlerForGET: @escaping (_ parsedResponse: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
+    func taskForGETMethod(parameters: String?, completionHandlerForGET: @escaping (_ deserializedData: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         /* 2/3. Build the URL, Configure the request */
         let urlString = Constants.APIScheme + Constants.APIHost + Constants.APIPath + parameters!
@@ -49,7 +49,7 @@ class FlickrClient {
             }
             
             /* 5/6. Parse the data and use the data (happens in completion handler) */
-            // Parse raw JSON and pass values for (parsedResponse, error) to completionHandlerForGET, rather than the traditional "in" followed by a code block. This has the effect of "bubbling up" the completion handler arguments.
+            // Parse raw JSON and pass values for (deserializedData, error) to completionHandlerForGET, rather than the traditional "in" followed by a code block. This has the effect of "bubbling up" the completion handler arguments.
             self.parseJSONWithCompletionHandler(data, completionHandlerForParsingJSON: completionHandlerForGET)
         }
         
@@ -62,11 +62,11 @@ class FlickrClient {
     
     // Deserialize raw (binary) JSON and cast it into a useable Foundation object (AnyObject).
     // parseJSONWithCompletionHandler gets called at the bottom of taskForGETMethod.
-    private func parseJSONWithCompletionHandler(_ data: Data, completionHandlerForParsingJSON: (_ parsedResponse: AnyObject?, _ error: NSError?) -> Void) {
+    private func parseJSONWithCompletionHandler(_ data: Data, completionHandlerForParsingJSON: (_ deserializedData: AnyObject?, _ error: NSError?) -> Void) {
         
-        var parsedResponse: AnyObject! = nil
+        var deserializedData: AnyObject! = nil
         do {
-            parsedResponse = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
+            deserializedData = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as AnyObject
         } catch {
             let userInfo = [NSLocalizedDescriptionKey : "Could not parse the data as JSON: '\(data)'"]
             // If there's an error, the completion handler is passed the arguments below.
@@ -74,7 +74,7 @@ class FlickrClient {
         }
         
         // If there's no error, the completion hooandler is passed the arguments below.
-        completionHandlerForParsingJSON(parsedResponse, nil)
+        completionHandlerForParsingJSON(deserializedData, nil)
     }
     
     // MARK: Shared Instance
