@@ -26,7 +26,7 @@ class PhotosViewController: UIViewController {
     var photoArray = [[String : AnyObject]]()
     
     // Store an array of cells that the user tapped to be deleted.
-    var indexPathArray = [IndexPath]()
+    var tappedIndexPaths = [IndexPath]()
     var insertedIndexPaths: [NSIndexPath]!
     var deletedIndexPaths: [NSIndexPath]!
     
@@ -93,7 +93,12 @@ class PhotosViewController: UIViewController {
                    self.collectionView.reloadData()
                 }
                 
-                // Need to save photos to Core Data
+                // Save to Core Data
+                do {
+                    try self.stack.context.save()
+                } catch {
+                    print("error")
+                }
 
             } else {
                 print("Error loading photos")
@@ -116,13 +121,14 @@ class PhotosViewController: UIViewController {
     // Delete the photos selected by the user. This method deletes the photos from the database, but not from the UI.
     func deleteSelectedPhotos() {
         
-        // Delete the photos corresponding to the indexes stored in self.indexPathArray (populated in didSelectItemAt)
-        for indexPath in indexPathArray {
+        // Delete the photos corresponding to the indexes stored in self.tappedIndexPaths (populated in didSelectItemAt)
+        for indexPath in tappedIndexPaths {
             
             photoArray.remove(at: indexPath.row)
-            //stack.context.delete(fetchedResultsController?.object(at: indexPath as IndexPath) as! Photo)
+
+            // stack.context.delete(fetchedResultsController?.object(at: indexPath as IndexPath) as! Photo)
         }
-        
+
         collectionView.reloadData()
     }
     
@@ -212,7 +218,7 @@ extension PhotosViewController: UICollectionViewDelegate {
         // Whenever user selects one or more cells, the bar button changes to Remove seleceted pictures
         self.barButton.title = "Remove selected pictures"
         
-        self.indexPathArray.append(indexPath)
+        self.tappedIndexPaths.append(indexPath)
     }
     
 }
@@ -245,7 +251,17 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
-        // Do something
+        collectionView.performBatchUpdates({
+            for indexPath in self.insertedIndexPaths{
+                self.collectionView.insertItems(at: [indexPath as IndexPath])
+            }
+            
+            for indexPath in self.deletedIndexPaths{
+                self.collectionView.deleteItems(at: [indexPath as IndexPath])
+            }
+
+        }, completion: nil)
+        
     }
 
 }
