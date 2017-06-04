@@ -118,7 +118,7 @@ class PhotosViewController: UIViewController {
         }
     }
     
-    // Delete the photos selected by the user. This method deletes the photos from the database, but not from the UI.
+    // Delete the photos selected by the user. 
     func deleteSelectedPhotos() {
         
         // Delete the photos corresponding to the indexes stored in self.tappedIndexPaths (populated in didSelectItemAt)
