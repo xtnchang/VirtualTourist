@@ -36,7 +36,7 @@ class PhotosViewController: UIViewController {
             // The protocol is NSFetchedResultsControllerDelegate, which PhotosViewController conforms to (see extension).
             fetchedResultsController?.delegate = self
             
-            // Whenever the frc changes (i.e. new fetch request passed in), we fetch the photos.
+            // Whenever the frc changes (i.e. new fetch request passed in), we fetch the photos from the context.
             fetchPhotos()
             
             // Whenever performFetch is called on the fetchedResultsController (as it is in fetchPhotos()), we reload the collection view.
@@ -91,13 +91,6 @@ class PhotosViewController: UIViewController {
                 
                 DispatchQueue.main.async {
                    self.collectionView.reloadData()
-                }
-                
-                // Save to Core Data
-                do {
-                    try self.stack.context.save()
-                } catch {
-                    print("error")
                 }
 
             } else {
@@ -162,7 +155,7 @@ extension PhotosViewController: UICollectionViewDataSource {
         
         // For each cell, retrieve the image corresponding to the cell's indexPath.
         let photoToLoad = photoArray[indexPath.row]
-        // let photoToLoad = fetchedResultsController!.object(at: indexPath) as! PhotoViewCell
+        // let photoToLoad = fetchedResultsController!.object(at: indexPath) as! Photo
     
         // Download the image at the url
         if let url = photoToLoad["url_m"] as? String {
@@ -196,6 +189,16 @@ extension PhotosViewController: UICollectionViewDataSource {
                 completionHandlerForDownload(nil, error)
                 return
             }
+            
+//            let photo = Photo(imageData: data as NSData, context: self.stack.context)
+//            photo.pin = self.tappedPin
+//            
+//            // Save to Core Data
+//            do {
+//                try self.stack.context.save()
+//            } catch {
+//                print("error")
+//            }
             
             completionHandlerForDownload(image, nil)
         }
