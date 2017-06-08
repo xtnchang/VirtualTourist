@@ -163,6 +163,13 @@ extension PhotosViewController: UICollectionViewDataSource {
                 cell.imageView.image = image
             }
         }
+        
+        // Save to Core Data
+        do {
+            try self.stack.context.save()
+        } catch {
+            print("error")
+        }
 
         return cell
     }
@@ -192,13 +199,6 @@ extension PhotosViewController: UICollectionViewDataSource {
             
 //            let photo = Photo(imageData: data as NSData, context: self.stack.context)
 //            photo.pin = self.tappedPin
-//            
-//            // Save to Core Data
-//            do {
-//                try self.stack.context.save()
-//            } catch {
-//                print("error")
-//            }
             
             completionHandlerForDownload(image, nil)
         }
