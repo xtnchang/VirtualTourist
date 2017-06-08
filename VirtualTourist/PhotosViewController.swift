@@ -159,11 +159,11 @@ extension PhotosViewController: UICollectionViewDataSource {
     
         // Download the image at the url
         if let url = photoToLoad["url_m"] as? String {
-            downloadPhotoWith(url: url) { (image, error) in
+            self.downloadPhotoWith(url: url) { (image, error) in
                 cell.imageView.image = image
             }
         }
-        
+
         // Save to Core Data
         do {
             try self.stack.context.save()
@@ -197,9 +197,11 @@ extension PhotosViewController: UICollectionViewDataSource {
                 return
             }
             
-//            let photo = Photo(imageData: data as NSData, context: self.stack.context)
-//            photo.pin = self.tappedPin
-            
+//            DispatchQueue.main.async {
+//                let photo = Photo(imageData: data as NSData, context: self.stack.context)
+//                photo.pin = self.tappedPin
+//            }
+        
             completionHandlerForDownload(image, nil)
         }
         
