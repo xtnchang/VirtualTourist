@@ -157,8 +157,9 @@ extension PhotosViewController: UICollectionViewDataSource {
         let photoToLoad = urlArray[indexPath.row]
         // let photoToLoad = fetchedResultsController!.object(at: indexPath) as! Photo
     
-        for url in urlArray {
-            FlickrClient.sharedInstance().downloadPhotoWith(url: url) { (success, image, error) in
+        // Download the image at the url
+        if let url = photoToLoad["url_m"] as? String {
+            self.downloadPhotoWith(url: url) { (image, error) in
                 cell.imageView.image = image
             }
         }
@@ -171,6 +172,40 @@ extension PhotosViewController: UICollectionViewDataSource {
         }
 
         return cell
+    }
+    
+    // Helper method: given a URL, get the UIImage to load in the collection view cell
+    func downloadPhotoWith(url: String, completionHandlerForDownload: @escaping (_ image: UIImage?, _ error: Error?) -> Void) {
+        
+        let session = URLSession.shared
+        
+        // Convert the url string to URL so that it can be passed into dataTask(with url:)
+        guard let photoURL = URL(string: url) else {
+            completionHandlerForDownload(nil, nil)
+            return
+        }
+        
+        let task = session.dataTask(with: photoURL) { (data, response, error) in
+            
+            guard let data = data else {
+                completionHandlerForDownload(nil, error)
+                return
+            }
+            
+            guard let image = UIImage(data: data) else {
+                completionHandlerForDownload(nil, error)
+                return
+            }
+            
+//            DispatchQueue.main.async {
+//                let photo = Photo(imageData: data as NSData, context: self.stack.context)
+//                photo.pin = self.tappedPin
+//            }
+        
+            completionHandlerForDownload(image, nil)
+        }
+        
+        task.resume()
     }
     
 }

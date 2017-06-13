@@ -67,35 +67,4 @@ extension FlickrClient {
         }
     }
     
-    // Helper method: given a URL, get the UIImage to load in the collection view cell
-    func downloadPhotoWith(url: String, completionHandlerForDownload: @escaping (_ success: Bool, _ image: UIImage?, _ error: Error?) -> Void) {
-        
-        let session = URLSession.shared
-        
-        // Convert the url string to URL so that it can be passed into dataTask(with url:)
-        let imageURL = URL(string: url)
-        
-        let task = session.dataTask(with: imageURL!) { (data, response, error) in
-            
-            guard let data = data else {
-                completionHandlerForDownload(false, nil, error)
-                return
-            }
-            
-            guard let image = UIImage(data: data) else {
-                completionHandlerForDownload(false, nil, error)
-                return
-            }
-            
-            //            DispatchQueue.main.async {
-            //                let photo = Photo(imageData: data as NSData, context: self.stack.context)
-            //                photo.pin = self.tappedPin
-            //            }
-            
-            completionHandlerForDownload(true, image, nil)
-        }
-        
-        task.resume()
-    }
-    
 }
