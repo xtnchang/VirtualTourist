@@ -12,7 +12,7 @@ import UIKit
 extension FlickrClient {
     
     // The HTTP response for the photos is a dictionary.
-    func getLocationPhotos(latitude: Double, longitude: Double, completionHandlerForPhotos: @escaping (_ success: Bool, _ photos: [[String : AnyObject]]?, _ error: NSError?) -> Void) {
+    func getLocationPhotos(latitude: Double, longitude: Double, completionHandlerForPhotos: @escaping (_ success: Bool, _ urlArray: [String]?, _ error: NSError?) -> Void) {
         
         let latString = String(describing: latitude)
         let lonString = String(describing: longitude)
@@ -50,9 +50,19 @@ extension FlickrClient {
                 return
             }
             
+            var urlArray = [String]()
+            
+            for photo in photosArray {
+                guard let url = photo[FlickrResponseKeys.MediumURL] as? String else {
+                    return
+                }
+                
+                urlArray.append(url)
+            }
+            
             // In this completion handler, we just retrieve the photosArray (image metadata) rather than downloading the actual images themselves (type Data), because that is very resource intensive and causes the images to load very slowly.
             
-            completionHandlerForPhotos(true, photosArray, nil)
+            completionHandlerForPhotos(true, urlArray, nil)
             
         }
     }
