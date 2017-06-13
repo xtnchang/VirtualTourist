@@ -158,10 +158,8 @@ extension PhotosViewController: UICollectionViewDataSource {
         // let photoToLoad = fetchedResultsController!.object(at: indexPath) as! Photo
     
         // Download the image at the url
-        for url in urlArray {
-            FlickrClient.sharedInstance().downloadPhotoWith(url: url) { (success, image, error) in
-                cell.imageView.image = image
-            }
+        FlickrClient.sharedInstance().downloadPhotoWith(url: photoToLoad) { (success, image, error) in
+            cell.imageView.image = image
         }
 
         // Save to Core Data
