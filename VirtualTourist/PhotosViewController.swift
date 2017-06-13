@@ -30,8 +30,6 @@ class PhotosViewController: UIViewController {
     var insertedIndexPaths: [NSIndexPath]!
     var deletedIndexPaths: [NSIndexPath]!
     
-    var deletedPhotoIds = [NSManagedObject]()
-    
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? {
         didSet {
             
@@ -50,8 +48,6 @@ class PhotosViewController: UIViewController {
     let stack = (UIApplication.shared.delegate as! AppDelegate).stack
     
     override func viewDidLoad() {
-        super.viewDidLoad()
-        retrieveDeletedPhotoIds()
         showPin()
         loadPhotos()
         collectionView.delegate = self
@@ -90,18 +86,7 @@ class PhotosViewController: UIViewController {
             if success {
                 
                 if let unwrappedPhotoDataArray = photoDataArray {
-                    
-                    // https://stackoverflow.com/questions/41763790/array-filter-in-swift3
-                    self.photoArray = unwrappedPhotoDataArray.filter({ (photoDictionary) -> Bool in
-                        if let id = photoDictionary["id"] as? String {
-                            
-                            // https://developer.apple.com/documentation/swift/array/2297359-contains
-                            return !self.deletedPhotoIds.contains(where: { (object) -> Bool in
-                                return object.value(forKey: "photoId") as? String == id
-                            })
-                        }
-                        return false
-                    })
+                    self.photoArray = unwrappedPhotoDataArray
                 }
                 
                 DispatchQueue.main.async {
@@ -132,44 +117,12 @@ class PhotosViewController: UIViewController {
         // Delete the photos corresponding to the indexes stored in self.tappedIndexPaths (populated in didSelectItemAt)
         for indexPath in tappedIndexPaths {
             
-            let photo = photoArray[indexPath.row]
-            if let photoId = photo["id"] as? String {
-                saveDeletedPhotoId(id: photoId)
-            }
-            
             photoArray.remove(at: indexPath.row)
 
             // stack.context.delete(fetchedResultsController?.object(at: indexPath as IndexPath) as! Photo)
         }
 
         collectionView.reloadData()
-    }
-    
-    func saveDeletedPhotoId(id: String) {
-
-        if let entity = NSEntityDescription.entity(forEntityName: "DeletedPhotos", in: stack.context) {
-            let photoId = NSManagedObject(entity: entity, insertInto: stack.context)
-            deletedPhotoIds.append(photoId)
-            photoId.setValue(id, forKey: "photoId")
-            do {
-                try stack.context.save()
-            }
-            catch {
-                print(error.localizedDescription)
-            }
-        }
-        
-    }
-    
-    func retrieveDeletedPhotoIds() {
-        let managedContext = stack.context
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "DeletedPhotos")
-        do {
-            deletedPhotoIds = try managedContext.fetch(fetchRequest)
-        }
-        catch {
-            print("fetch error")
-        }
     }
     
     
@@ -180,8 +133,6 @@ class PhotosViewController: UIViewController {
             deleteSelectedPhotos()
             
             self.barButton.title = "Refresh collection"
-            
-            collectionView.reloadData()
             
         } else {
             print("refresh collection")
@@ -247,8 +198,6 @@ extension PhotosViewController: UICollectionViewDataSource {
             }
             
 //            DispatchQueue.main.async {
-//                
-//                // Instantiate a Photo object
 //                let photo = Photo(imageData: data as NSData, context: self.stack.context)
 //                photo.pin = self.tappedPin
 //            }
