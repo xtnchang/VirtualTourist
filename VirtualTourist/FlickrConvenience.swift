@@ -12,7 +12,7 @@ import UIKit
 extension FlickrClient {
     
     // The HTTP response for the photos is a dictionary.
-    func getLocationPhotos(latitude: Double, longitude: Double, completionHandlerForPhotos: @escaping (_ success: Bool, _ photos: [[String : AnyObject]]?, _ error: NSError?) -> Void) {
+    func getLocationPhotos(latitude: Double, longitude: Double, completionHandlerForPhotos: @escaping (_ success: Bool, _ urlArray: [String]?, _ error: NSError?) -> Void) {
         
         let latString = String(describing: latitude)
         let lonString = String(describing: longitude)
@@ -50,11 +50,53 @@ extension FlickrClient {
                 return
             }
             
-            // In this completion handler, we just retrieve the photosArray (image metadata) rather than downloading the actual images themselves (type Data), because that is very resource intensive and causes the images to load very slowly.
+            var urlArray = [String]()
             
-            completionHandlerForPhotos(true, photosArray, nil)
+            for photo in photosArray {
+                guard let url = photo[FlickrResponseKeys.MediumURL] as? String else {
+                    sendError(error: "Cannot find url")
+                    return
+                }
+                
+                urlArray.append(url)
+            }
+            
+            // In this completion handler, we just retrieve the photosArray (urls) rather than downloading the actual images themselves (type Data), because that is very resource intensive and causes the images to load very slowly.
+            
+            completionHandlerForPhotos(true, urlArray, nil)
             
         }
+    }
+    
+    // Helper method: given a URL, get the UIImage to load in the collection view cell
+    func downloadPhotoWith(url: String, completionHandlerForDownload: @escaping (_ success: Bool, _ image: UIImage?, _ error: Error?) -> Void) {
+        
+        let session = URLSession.shared
+        
+        // Convert the url string to URL so that it can be passed into dataTask(with url:)
+        let photoURL = URL(string: url)
+        
+        let task = session.dataTask(with: photoURL!) { (data, response, error) in
+            
+            guard let data = data else {
+                completionHandlerForDownload(false, nil, error)
+                return
+            }
+            
+            guard let image = UIImage(data: data) else {
+                completionHandlerForDownload(false, nil, error)
+                return
+            }
+            
+            //            DispatchQueue.main.async {
+            //                let photo = Photo(imageData: data as NSData, context: self.stack.context)
+            //                photo.pin = self.tappedPin
+            //            }
+            
+            completionHandlerForDownload(true, image, nil)
+        }
+        
+        task.resume()
     }
     
 }
