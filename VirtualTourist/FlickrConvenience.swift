@@ -88,11 +88,6 @@ extension FlickrClient {
                 return
             }
             
-            //            DispatchQueue.main.async {
-            //                let photo = Photo(imageData: data as NSData, context: self.stack.context)
-            //                photo.pin = self.tappedPin
-            //            }
-            
             completionHandlerForDownload(true, image, nil)
         }
         
