@@ -22,8 +22,8 @@ class PhotosViewController: UIViewController {
     var latitude: Double?
     var longitude: Double?
     
-    // Store an array of image urls (from JSON). Populated in loadPhotos()
-    var urlArray = [String]()
+    // Store the data in the "photo" array (from JSON). Populated in loadPhotos()
+    var photoArray = [[String : AnyObject]]()
     
     // Store an array of cells that the user tapped to be deleted.
     var tappedIndexPaths = [IndexPath]()
@@ -81,12 +81,12 @@ class PhotosViewController: UIViewController {
     
     func loadPhotos() {
         
-        FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude!, longitude: longitude!) { (success, urlArray, error) in
+        FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude!, longitude: longitude!) { (success, photoDataArray, error) in
                 
             if success {
                 
-                if let unwrappedUrlArray = urlArray {
-                    self.urlArray = unwrappedUrlArray
+                if let unwrappedPhotoDataArray = photoDataArray {
+                    self.photoArray = unwrappedPhotoDataArray
                 }
                 
                 DispatchQueue.main.async {
@@ -117,7 +117,7 @@ class PhotosViewController: UIViewController {
         // Delete the photos corresponding to the indexes stored in self.tappedIndexPaths (populated in didSelectItemAt)
         for indexPath in tappedIndexPaths {
             
-            urlArray.remove(at: indexPath.row)
+            photoArray.remove(at: indexPath.row)
 
             // stack.context.delete(fetchedResultsController?.object(at: indexPath as IndexPath) as! Photo)
         }
@@ -146,7 +146,7 @@ extension PhotosViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return self.urlArray.count
+        return self.photoArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -154,7 +154,7 @@ extension PhotosViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoViewCell
         
         // For each cell, retrieve the image corresponding to the cell's indexPath.
-        let photoToLoad = urlArray[indexPath.row]
+        let photoToLoad = photoArray[indexPath.row]
         // let photoToLoad = fetchedResultsController!.object(at: indexPath) as! Photo
     
         // Download the image at the url
