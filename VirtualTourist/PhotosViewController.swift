@@ -53,15 +53,16 @@ class PhotosViewController: UIViewController {
     override func viewDidLoad() {
         showPin()
         
-        // Check if this pin has photos stored in Core Data. If not, then download photos from Flickr. Otherwise, fetche the photos from Core Data.        
-        let fetchedObjects = fetchedResultsController.fetchedObjects
-        if fetchedObjects?.count == 0 {
-            loadPhotos()
-        } else {
-            fetchPhotos()
-        }
+        // Check if this pin has photos stored in Core Data. If not, then download photos from Flickr. Otherwise, fetch the photos from Core Data.
+//        let fetchedObjects = fetchedResultsController.fetchedObjects
+//        if fetchedObjects?.count == 0 {
+//            loadPhotosFromFlickr()
+//        } else {
+//            fetchPhotosFromCoreData()
+//        }
         
-        loadPhotos()
+        loadPhotosFromFlickr()
+        
         collectionView.delegate = self
         collectionView.dataSource = self
     }
@@ -81,7 +82,7 @@ class PhotosViewController: UIViewController {
         self.mapView.setRegion(coordinateRegion, animated: true)
     }
     
-    func loadPhotos() {
+    func loadPhotosFromFlickr() {
         
         FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude!, longitude: longitude!) { (success, urlArray, error) in
                 
@@ -92,7 +93,8 @@ class PhotosViewController: UIViewController {
                 }
                 
                 for url in urlArray! {
-                    _ = Photo(pin: self.tappedPin!, imageURL: url, context: self.stack.context)
+                    var photo = Photo(pin: self.tappedPin!, imageURL: url, context: self.stack.context)
+                    self.photoEntityArray.append(photo)
                 }
                 
                 do {
@@ -112,7 +114,7 @@ class PhotosViewController: UIViewController {
     }
     
     // Display the images specified by the fetch request and fetchedResultsController in viewDidLoad.
-    func fetchPhotos() {
+    func fetchPhotosFromCoreData() {
         
         self.fetchedResultsController.delegate = self
         
@@ -165,7 +167,7 @@ extension PhotosViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return self.urlArray.count
+        return self.photoEntityArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -173,11 +175,13 @@ extension PhotosViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoViewCell
         
         // For each cell, retrieve the image corresponding to the cell's indexPath.
-        let photoToLoad = urlArray[indexPath.row]
+        let photoToLoad = photoEntityArray[indexPath.row]
         // let photoToLoad = fetchedResultsController!.object(at: indexPath) as! Photo
     
+        let url = photoToLoad.imageURL
+        
         // Download the image at the url
-        FlickrClient.sharedInstance().downloadPhotoWith(url: photoToLoad) { (success, image, error) in
+        FlickrClient.sharedInstance().downloadPhotoWith(url: url!) { (success, image, error) in
             cell.imageView.image = image
         }
 
