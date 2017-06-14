@@ -53,7 +53,7 @@ class PhotosViewController: UIViewController {
     override func viewDidLoad() {
         showPin()
         
-        // Check if this pin has photos stored in Core Data. If not, then download photos from Flickr. Otherwise, fetch the photos from Core Data.
+        // Check if this pin has photos stored in Core Data. If not, then load photos from Flickr. Otherwise, fetch the photos from Core Data.
 //        let fetchedObjects = fetchedResultsController.fetchedObjects
 //        if fetchedObjects?.count == 0 {
 //            loadPhotosFromFlickr()
@@ -100,7 +100,7 @@ class PhotosViewController: UIViewController {
                 do {
                     try self.stack.context.save()
                 } catch {
-                    print("error saving the image")
+                    print("Error saving the url")
                 }
                 
                 DispatchQueue.main.async {
@@ -183,13 +183,6 @@ extension PhotosViewController: UICollectionViewDataSource {
         // Download the image at the url
         FlickrClient.sharedInstance().downloadPhotoWith(url: url!) { (success, image, error) in
             cell.imageView.image = image
-        }
-
-        // Save to Core Data
-        do {
-            try self.stack.context.save()
-        } catch {
-            print("error")
         }
 
         return cell
