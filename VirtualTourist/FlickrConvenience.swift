@@ -61,7 +61,7 @@ extension FlickrClient {
                 urlArray.append(url)
             }
             
-            // In this completion handler, we just retrieve the photosArray (urls) rather than downloading the actual images themselves (type Data), because that is very resource intensive and causes the images to load very slowly.
+            // In this completion handler, we just retrieve the urlArray (urls) rather than downloading the actual images themselves (type Data), because that is very resource intensive and causes the images to load very slowly.
             
             completionHandlerForPhotos(true, urlArray, nil)
             

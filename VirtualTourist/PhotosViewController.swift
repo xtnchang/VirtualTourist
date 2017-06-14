@@ -25,6 +25,9 @@ class PhotosViewController: UIViewController {
     // Store the data in the "photo" array (from JSON). Populated in loadPhotos()
     var urlArray = [String]()
     
+    // Store the photo entities in an array. This array is associated with the context, so when there are objects in this array, you can save them by saving the context.
+    var photoEntityArray = [Photo]()
+    
     // Store an array of cells that the user tapped to be deleted.
     var tappedIndexPaths = [IndexPath]()
     var insertedIndexPaths: [NSIndexPath]!
@@ -89,6 +92,16 @@ class PhotosViewController: UIViewController {
                     self.urlArray = unwrappedUrlArray
                 }
                 
+                for url in urlArray! {
+                    _ = Photo(pin: self.tappedPin!, imageURL: url, context: self.stack.context)
+                }
+                
+                do {
+                    try self.stack.context.save()
+                } catch {
+                    print("error saving the image")
+                }
+                
                 DispatchQueue.main.async {
                    self.collectionView.reloadData()
                 }
@@ -102,12 +115,17 @@ class PhotosViewController: UIViewController {
     // Display the images specified by the fetch request and fetchedResultsController in viewDidLoad.
     func fetchPhotos() {
         
-        if let frc = fetchedResultsController {
-            do {
-                try frc.performFetch()
-            } catch let error as NSError {
-                print("Error while trying to perform a search: \n\(error)\n\(fetchedResultsController)")
-            }
+        do {
+            try fetchedResultsController?.performFetch()
+        } catch let error as NSError {
+            print("Error while trying to perform a search: \n\(error)\n\(fetchedResultsController)")
+        }
+
+        let fetchedObjects = fetchedResultsController?.fetchedObjects
+        
+        for fetchedObject in fetchedObjects! {
+            let object = fetchedObject as! Photo
+            self.photoEntityArray.append(object)
         }
     }
     

@@ -69,7 +69,7 @@ class MapViewController: UIViewController {
             do {
                 try stack.context.save()
             } catch {
-                print("error")
+                print("error saving the pin")
             }
         }
     }
