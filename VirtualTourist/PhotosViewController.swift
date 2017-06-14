@@ -22,9 +22,6 @@ class PhotosViewController: UIViewController {
     var latitude: Double?
     var longitude: Double?
     
-    // Store the data in the "photo" array (from JSON). Populated in loadPhotos()
-    var urlArray = [String]()
-    
     // Store the photo entities in an array. This array is associated with the context, so when there are objects in this array, you can save them by saving the context.
     var photoEntityArray = [Photo]()
     
@@ -94,12 +91,8 @@ class PhotosViewController: UIViewController {
                 
             if success {
                 
-                if let unwrappedUrlArray = urlArray {
-                    self.urlArray = unwrappedUrlArray
-                }
-                
                 for url in urlArray! {
-                    var photo = Photo(pin: self.tappedPin!, imageURL: url, context: self.stack.context)
+                    let photo = Photo(pin: self.tappedPin!, imageURL: url, context: self.stack.context)
                     self.photoEntityArray.append(photo)
                 }
                 
@@ -138,9 +131,14 @@ class PhotosViewController: UIViewController {
         // Delete the photos corresponding to the indexes stored in self.tappedIndexPaths (populated in didSelectItemAt)
         for indexPath in tappedIndexPaths {
             
-            urlArray.remove(at: indexPath.row)
-
-            // stack.context.delete(fetchedResultsController?.object(at: indexPath as IndexPath) as! Photo)
+            photoEntityArray.remove(at: indexPath.row)
+            // stack.context.delete(fetchedResultsController.object(at: indexPath as IndexPath) as! Photo)
+        }
+        
+        do {
+            try stack.context.save()
+        } catch {
+            print("Error saving the context after deleting photos")
         }
 
         collectionView.reloadData()
