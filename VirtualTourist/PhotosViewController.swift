@@ -33,38 +33,37 @@ class PhotosViewController: UIViewController {
     var insertedIndexPaths: [NSIndexPath]!
     var deletedIndexPaths: [NSIndexPath]!
     
-    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? {
-        didSet {
-            
-            // The protocol is NSFetchedResultsControllerDelegate, which PhotosViewController conforms to (see extension).
-            fetchedResultsController?.delegate = self
-            
-            // Whenever the frc changes (i.e. new fetch request passed in), we fetch the photos from the context.
-            fetchPhotos()
-            
-            // Whenever performFetch is called on the fetchedResultsController (as it is in fetchPhotos()), we reload the collection view.
-            collectionView.reloadData()
-        }
-    }
+    lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
+       
+        // Create a fetch request
+        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
+        fr.sortDescriptors = [NSSortDescriptor(key: "imageData", ascending: true)]
+        
+        // Specify that we only want the photos associated with the tapped pin. (pin is the relationships)
+        fr.predicate = NSPredicate(format: "pin = %@", self.tappedPin!)
+        
+        // Create the FetchedResultsController
+        return NSFetchedResultsController(fetchRequest: fr, managedObjectContext: self.stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        
+    }()
     
     // Get the stack
     let stack = (UIApplication.shared.delegate as! AppDelegate).stack
     
     override func viewDidLoad() {
         showPin()
+        
+        // Check if this pin has photos stored in Core Data. If not, then download photos from Flickr. Otherwise, fetche the photos from Core Data.        
+        let fetchedObjects = fetchedResultsController.fetchedObjects
+        if fetchedObjects?.count == 0 {
+            loadPhotos()
+        } else {
+            fetchPhotos()
+        }
+        
         loadPhotos()
         collectionView.delegate = self
         collectionView.dataSource = self
-        
-        // Create a fetch request
-        let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
-        fr.sortDescriptors = [NSSortDescriptor(key: "imageData", ascending: true)]
-        
-        // Specify that we only want the photos associated with the tapped pin. (pin is the relationships)
-        fr.predicate = NSPredicate(format: "pin = %@", tappedPin!)
-        
-        // Create the FetchedResultsController
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: stack.context, sectionNameKeyPath: nil, cacheName: nil)
     }
     
     func showPin() {
@@ -115,13 +114,15 @@ class PhotosViewController: UIViewController {
     // Display the images specified by the fetch request and fetchedResultsController in viewDidLoad.
     func fetchPhotos() {
         
+        self.fetchedResultsController.delegate = self
+        
         do {
-            try fetchedResultsController?.performFetch()
+            try fetchedResultsController.performFetch()
         } catch let error as NSError {
             print("Error while trying to perform a search: \n\(error)\n\(fetchedResultsController)")
         }
 
-        let fetchedObjects = fetchedResultsController?.fetchedObjects
+        let fetchedObjects = fetchedResultsController.fetchedObjects
         
         for fetchedObject in fetchedObjects! {
             let object = fetchedObject as! Photo
