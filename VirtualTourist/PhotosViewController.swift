@@ -40,7 +40,11 @@ class PhotosViewController: UIViewController {
         fr.predicate = NSPredicate(format: "pin = %@", self.tappedPin!)
         
         // Create the FetchedResultsController
-        return NSFetchedResultsController(fetchRequest: fr, managedObjectContext: self.stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        let frc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: self.stack.context, sectionNameKeyPath: nil, cacheName: nil)
+        
+        frc.delegate = self
+        
+        return frc
         
     }()
     
@@ -114,9 +118,7 @@ class PhotosViewController: UIViewController {
     
     // Display the images specified by the fetch request and fetchedResultsController in viewDidLoad.
     func fetchPhotosFromCoreData() {
-        
-        self.fetchedResultsController.delegate = self
-        
+
         let fetchedObjects = fetchedResultsController.fetchedObjects
         
         for fetchedObject in fetchedObjects! {
@@ -166,11 +168,16 @@ extension PhotosViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         return self.photoEntityArray.count
+        // Return the number of objects in Core Data
+        // https://www.youtube.com/watch?v=0JJJ2WGpw_I (8:30)
+        // return fetchedResultsController.sections![0].numberOfObjects
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoViewCell
+        
+        // TO DO: If a photo exists for this indexPath in Core Data, then display the object in the fetchedResultsController. If no photo exists in Core Data, then download a photo from Flickr.
         
         // For each cell, retrieve the image corresponding to the cell's indexPath.
         let photoToLoad = photoEntityArray[indexPath.row]
@@ -215,6 +222,7 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
         deletedIndexPaths = [NSIndexPath]()
     }
     
+    // https://www.youtube.com/watch?v=0JJJ2WGpw_I (13:50-15:00)
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         print("didChange anObject")
@@ -232,6 +240,7 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
         }
     }
     
+    // https://www.youtube.com/watch?v=0JJJ2WGpw_I (18:15)
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
         collectionView.performBatchUpdates({
