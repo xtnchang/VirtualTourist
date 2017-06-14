@@ -53,15 +53,21 @@ class PhotosViewController: UIViewController {
     override func viewDidLoad() {
         showPin()
         
-        // Check if this pin has photos stored in Core Data. If not, then load photos from Flickr. Otherwise, fetch the photos from Core Data.
-//        let fetchedObjects = fetchedResultsController.fetchedObjects
-//        if fetchedObjects?.count == 0 {
-//            loadPhotosFromFlickr()
-//        } else {
-//            fetchPhotosFromCoreData()
-//        }
+        // Check if this pin has photos stored in Core Data.
+        do {
+            try fetchedResultsController.performFetch()
+        } catch let error as NSError {
+            print("Error while trying to perform a search: \n\(error)\n\(fetchedResultsController)")
+        }
         
-        loadPhotosFromFlickr()
+        let fetchedObjects = fetchedResultsController.fetchedObjects
+        
+        // If this pin has no photos stored in Core Data, then load photos from Flickr. Otherwise, fetch the photos from Core Data.
+        if fetchedObjects?.count == 0 {
+            loadPhotosFromFlickr()
+        } else {
+            fetchPhotosFromCoreData()
+        }
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -118,12 +124,6 @@ class PhotosViewController: UIViewController {
         
         self.fetchedResultsController.delegate = self
         
-        do {
-            try fetchedResultsController.performFetch()
-        } catch let error as NSError {
-            print("Error while trying to perform a search: \n\(error)\n\(fetchedResultsController)")
-        }
-
         let fetchedObjects = fetchedResultsController.fetchedObjects
         
         for fetchedObject in fetchedObjects! {
