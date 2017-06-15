@@ -185,7 +185,7 @@ extension PhotosViewController: UICollectionViewDataSource {
         // The frc should have access to to the photo URLs downloaded in loadPhotosFromFlickr().
         let photoToLoad = fetchedResultsController.object(at: indexPath) as! Photo
     
-        // If a photo exists for this indexPath in Core Data, then display the object in the fetchedResultsController. If no photo exists in Core Data, then download a photo from Flickr.
+        // If no photo exists in Core Data, then download a photo from Flickr. If a photo exists for this indexPath in Core Data, then display the object in the fetchedResultsController.
         if photoToLoad.imageData == nil {
             FlickrClient.sharedInstance().downloadPhotoWith(url: photoToLoad.imageURL!) { (success, imageData, error) in
                 
@@ -259,10 +259,10 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
         
         switch type {
             
-        case NSFetchedResultsChangeType.insert:
+        case .insert:
             insertedIndexPaths.append(newIndexPath! as NSIndexPath)
             
-        case NSFetchedResultsChangeType.delete:
+        case .delete:
             deletedIndexPaths.append(indexPath! as NSIndexPath)
             
         default:
