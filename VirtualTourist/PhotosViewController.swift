@@ -96,9 +96,13 @@ class PhotosViewController: UIViewController {
             if success {
                 
                 for url in urlArray! {
+                    
+                    // Since we insert the photo to the context, the frc now knows about it and tracks it as one of its objects. Context is like the database, and frc updates itself in real time.
                     let photo = Photo(pin: self.tappedPin!, imageURL: url, context: self.stack.context)
                     self.photoEntityArray.append(photo)
                 }
+                
+                // How do I populate my fetchedResultsController with the objects I just downloaded? Is this the place to do it?
                 
                 do {
                     try self.stack.context.save()
@@ -127,14 +131,14 @@ class PhotosViewController: UIViewController {
         }
     }
     
-    // Delete the photos selected by the user. 
+    // Delete the photos selected by the user from Core Data.
     func deleteSelectedPhotos() {
         
         // Delete the photos corresponding to the indexes stored in self.tappedIndexPaths (populated in didSelectItemAt)
         for indexPath in tappedIndexPaths {
             
-            photoEntityArray.remove(at: indexPath.row)
-            // stack.context.delete(fetchedResultsController.object(at: indexPath as IndexPath) as! Photo)
+            // photoEntityArray.remove(at: indexPath.row)
+            stack.context.delete(fetchedResultsController.object(at: indexPath as IndexPath) as! Photo)
         }
         
         do {
@@ -167,10 +171,10 @@ extension PhotosViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        return self.photoEntityArray.count
+        // return self.photoEntityArray.count
         // Return the number of objects in Core Data
         // https://www.youtube.com/watch?v=0JJJ2WGpw_I (8:30)
-        // return fetchedResultsController.sections![0].numberOfObjects
+        return fetchedResultsController.sections![0].numberOfObjects
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -180,8 +184,8 @@ extension PhotosViewController: UICollectionViewDataSource {
         // TO DO: If a photo exists for this indexPath in Core Data, then display the object in the fetchedResultsController. If no photo exists in Core Data, then download a photo from Flickr.
         
         // For each cell, retrieve the image corresponding to the cell's indexPath.
-        let photoToLoad = photoEntityArray[indexPath.row]
-        // let photoToLoad = fetchedResultsController!.object(at: indexPath) as! Photo
+        // let photoToLoad = photoEntityArray[indexPath.row]
+        let photoToLoad = fetchedResultsController.object(at: indexPath) as! Photo
     
         let url = photoToLoad.imageURL
         
@@ -223,6 +227,8 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
     }
     
     // https://www.youtube.com/watch?v=0JJJ2WGpw_I (13:50-15:00)
+    // This method is only called when anything in the context has been added or deleted. It collects the indexPaths that have changed. Then, in controllerDidChangeContent, the changes are applied to the UI. 
+    // The indexPath value is nil for insertions, and the newIndexPath value is nil for deletions.
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
         print("didChange anObject")
@@ -233,7 +239,7 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
             insertedIndexPaths.append(newIndexPath! as NSIndexPath)
             
         case NSFetchedResultsChangeType.delete:
-            deletedIndexPaths.append(newIndexPath! as NSIndexPath)
+            deletedIndexPaths.append(indexPath! as NSIndexPath)
             
         default:
             break
@@ -241,6 +247,7 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
     }
     
     // https://www.youtube.com/watch?v=0JJJ2WGpw_I (18:15)
+    // Updates the UI so that it syncs up with Core Data. This method doesn't change anything in Core Data.
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
         collectionView.performBatchUpdates({
