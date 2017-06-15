@@ -22,7 +22,7 @@ class PhotosViewController: UIViewController {
     var latitude: Double?
     var longitude: Double?
     
-    // Store the photo entities in an array. This array is associated with the context, so when there are objects in this array, you can save them by saving the context.
+    // Store the photo entities in an array.
     var photoEntityArray = [Photo]()
     
     // Store an array of cells that the user tapped to be deleted.
@@ -97,12 +97,10 @@ class PhotosViewController: UIViewController {
                 
                 for url in urlArray! {
                     
-                    // Since we insert the photo to the context, the frc now knows about it and tracks it as one of its objects. Context is like the database, and frc updates itself in real time.
+                    // Since we insert the photo to the context, the frc now knows about it and tracks it as one of its objects. The context is like the database, and the frc updates the UI in real time.
                     let photo = Photo(pin: self.tappedPin!, imageURL: url, context: self.stack.context)
                     self.photoEntityArray.append(photo)
                 }
-                
-                // How do I populate my fetchedResultsController with the objects I just downloaded? Is this the place to do it?
                 
                 do {
                     try self.stack.context.save()
@@ -181,18 +179,44 @@ extension PhotosViewController: UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoViewCell
         
-        // TO DO: If a photo exists for this indexPath in Core Data, then display the object in the fetchedResultsController. If no photo exists in Core Data, then download a photo from Flickr.
-        
         // For each cell, retrieve the image corresponding to the cell's indexPath.
         // let photoToLoad = photoEntityArray[indexPath.row]
+   
+        // The frc should have access to to the photo URLs downloaded in loadPhotosFromFlickr().
         let photoToLoad = fetchedResultsController.object(at: indexPath) as! Photo
     
-        let url = photoToLoad.imageURL
-        
-        // Download the image at the url
-        FlickrClient.sharedInstance().downloadPhotoWith(url: url!) { (success, image, error) in
-            cell.imageView.image = image
+        // If a photo exists for this indexPath in Core Data, then display the object in the fetchedResultsController. If no photo exists in Core Data, then download a photo from Flickr.
+        if photoToLoad.imageData == nil {
+            FlickrClient.sharedInstance().downloadPhotoWith(url: photoToLoad.imageURL!) { (success, imageData, error) in
+                
+                DispatchQueue.main.async {
+                    cell.imageView.image = UIImage(data: imageData as! Data)
+                }
+                
+                // Save the photo's corresponding imageData to Core Data.
+                photoToLoad.imageData = imageData
+                
+                do {
+                    try self.stack.context.save()
+                } catch {
+                    print("Error saving the imageData")
+                }
+                
+            }
+            
+        // Else, photoToLoad.imageData already exists.
+        } else {
+            
+            DispatchQueue.main.async {
+                cell.imageView.image = UIImage(data: photoToLoad.imageData as! Data)
+            }
         }
+        
+//        let url = photoToLoad.imageURL
+//        
+//        FlickrClient.sharedInstance().downloadPhotoWith(url: url!) { (success, imageData, error) in
+//            cell.imageView.image = UIImage(data: imageData as! Data)
+//        }
 
         return cell
     }

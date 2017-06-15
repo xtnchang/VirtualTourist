@@ -69,7 +69,7 @@ extension FlickrClient {
     }
     
     // Helper method: given a URL, get the UIImage to load in the collection view cell
-    func downloadPhotoWith(url: String, completionHandlerForDownload: @escaping (_ success: Bool, _ image: UIImage?, _ error: Error?) -> Void) {
+    func downloadPhotoWith(url: String, completionHandlerForDownload: @escaping (_ success: Bool, _ imageData: NSData?, _ error: Error?) -> Void) {
         
         let session = URLSession.shared
         
@@ -78,17 +78,17 @@ extension FlickrClient {
         
         let task = session.dataTask(with: photoURL!) { (data, response, error) in
             
-            guard let data = data else {
+            guard let imageData = data else {
                 completionHandlerForDownload(false, nil, error)
                 return
             }
             
-            guard let image = UIImage(data: data) else {
-                completionHandlerForDownload(false, nil, error)
-                return
-            }
+//            guard let image = UIImage(data: data) else {
+//                completionHandlerForDownload(false, nil, error)
+//                return
+//            }
             
-            completionHandlerForDownload(true, image, nil)
+            completionHandlerForDownload(true, imageData as NSData?, nil)
         }
         
         task.resume()
