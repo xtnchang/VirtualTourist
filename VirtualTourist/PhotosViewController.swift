@@ -189,19 +189,18 @@ extension PhotosViewController: UICollectionViewDataSource {
         if photoToLoad.imageData == nil {
             FlickrClient.sharedInstance().downloadPhotoWith(url: photoToLoad.imageURL!) { (success, imageData, error) in
                 
+                // Core Data is not thread friendly; put in main thread.
                 DispatchQueue.main.async {
                     cell.imageView.image = UIImage(data: imageData as! Data)
+                    // Save the photo's corresponding imageData to Core Data.
+                    photoToLoad.imageData = imageData
+                    
+                    do {
+                        try self.stack.context.save()
+                    } catch {
+                        print("Error saving the imageData")
+                    }
                 }
-                
-                // Save the photo's corresponding imageData to Core Data.
-                photoToLoad.imageData = imageData
-                
-                do {
-                    try self.stack.context.save()
-                } catch {
-                    print("Error saving the imageData")
-                }
-                
             }
             
         // Else, photoToLoad.imageData already exists.
