@@ -39,12 +39,8 @@ class PhotosViewController: UIViewController {
         // Specify that we only want the photos associated with the tapped pin. (pin is the relationships)
         fr.predicate = NSPredicate(format: "pin = %@", self.tappedPin!)
         
-        // Create the FetchedResultsController
-        let frc = NSFetchedResultsController(fetchRequest: fr, managedObjectContext: self.stack.context, sectionNameKeyPath: nil, cacheName: nil)
-        
-        frc.delegate = self
-        
-        return frc
+        // Create and return the FetchedResultsController
+        return NSFetchedResultsController(fetchRequest: fr, managedObjectContext: self.stack.context, sectionNameKeyPath: nil, cacheName: nil)
         
     }()
     
@@ -53,6 +49,8 @@ class PhotosViewController: UIViewController {
     
     override func viewDidLoad() {
         showPin()
+        
+        fetchedResultsController.delegate = self
         
         // Check if this pin has photos stored in Core Data.
         do {
