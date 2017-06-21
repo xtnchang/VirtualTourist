@@ -252,15 +252,15 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
     // The indexPath value is nil for insertions, and the newIndexPath value is nil for deletions.
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         
-        print("didChange anObject")
-        
         switch type {
             
         case .insert:
             insertedIndexPaths.append(newIndexPath! as NSIndexPath)
+            print("Inserted a new index path")
             
         case .delete:
             deletedIndexPaths.append(indexPath! as NSIndexPath)
+            print("Deleted an index path")
             
         default:
             break
