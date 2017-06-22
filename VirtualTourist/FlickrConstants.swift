@@ -47,6 +47,7 @@ extension FlickrClient {
         static let MediumURL = "url_m" // includes the photo URL in the response body
         static let UseSafeSearch = "1"
         static let PerPage = "20"
+        static let Page = "\(arc4random_uniform(10))"
     }
     
     // MARK: Flickr HTTP Response Keys

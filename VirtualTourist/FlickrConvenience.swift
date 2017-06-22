@@ -18,7 +18,7 @@ extension FlickrClient {
         let lonString = String(describing: longitude)
         
         // Build the query string parameters to pass into taskForGET.
-        let parameters = FlickrParameterKeys.Method + FlickrParameterValues.SearchMethod + "&" + FlickrParameterKeys.APIKey + FlickrParameterValues.APIKey + "&" + FlickrParameterKeys.Latitude + latString + "&" + FlickrParameterKeys.Longitude + lonString + "&" + FlickrParameterKeys.Extras + FlickrParameterValues.MediumURL + "&" + FlickrParameterKeys.Format + FlickrParameterValues.ResponseFormat + "&" + FlickrParameterKeys.NoJSONCallback + FlickrParameterValues.DisableJSONCallback + "&" + FlickrParameterKeys.PerPage + FlickrParameterValues.PerPage
+        let parameters = FlickrParameterKeys.Method + FlickrParameterValues.SearchMethod + "&" + FlickrParameterKeys.APIKey + FlickrParameterValues.APIKey + "&" + FlickrParameterKeys.Latitude + latString + "&" + FlickrParameterKeys.Longitude + lonString + "&" + FlickrParameterKeys.Extras + FlickrParameterValues.MediumURL + "&" + FlickrParameterKeys.Format + FlickrParameterValues.ResponseFormat + "&" + FlickrParameterKeys.NoJSONCallback + FlickrParameterValues.DisableJSONCallback + "&" + FlickrParameterKeys.PerPage + FlickrParameterValues.PerPage + "&" + FlickrParameterKeys.Page + FlickrParameterValues.Page
         
         taskForGETMethod(parameters: parameters) { (deserializedData, error) in
             
@@ -82,11 +82,6 @@ extension FlickrClient {
                 completionHandlerForDownload(false, nil, error)
                 return
             }
-            
-//            guard let image = UIImage(data: data) else {
-//                completionHandlerForDownload(false, nil, error)
-//                return
-//            }
             
             completionHandlerForDownload(true, imageData as NSData?, nil)
         }

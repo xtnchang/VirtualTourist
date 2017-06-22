@@ -73,7 +73,7 @@ class FlickrClient {
             completionHandlerForParsingJSON(nil, NSError(domain: "parseJSONWithCompletionHandler", code: 1, userInfo: userInfo))
         }
         
-        // If there's no error, the completion hooandler is passed the arguments below.
+        // If there's no error, the completion handler is passed the arguments below.
         completionHandlerForParsingJSON(deserializedData, nil)
     }
     
