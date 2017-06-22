@@ -210,12 +210,6 @@ extension PhotosViewController: UICollectionViewDataSource {
                 cell.imageView.image = UIImage(data: photoToLoad.imageData as! Data)
             }
         }
-        
-//        let url = photoToLoad.imageURL
-//        
-//        FlickrClient.sharedInstance().downloadPhotoWith(url: url!) { (success, imageData, error) in
-//            cell.imageView.image = UIImage(data: imageData as! Data)
-//        }
 
         return cell
     }
