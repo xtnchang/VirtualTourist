@@ -23,7 +23,7 @@ class PhotosViewController: UIViewController {
     var longitude: Double?
     
     // Store the photo entities in an array.
-    var photoEntityArray = [Photo]()
+    // var photoEntityArray = [Photo]()
     
     // Store an array of cells that the user tapped to be deleted.
     var tappedIndexPaths = [IndexPath]()
@@ -64,9 +64,10 @@ class PhotosViewController: UIViewController {
         // If this pin has no photos stored in Core Data, then load photos from Flickr. Otherwise, fetch the photos from Core Data.
         if fetchedObjects?.count == 0 {
             loadPhotosFromFlickr()
-        } else {
-            fetchPhotosFromCoreData()
         }
+//        else {
+//            fetchPhotosFromCoreData()
+//        }
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -97,7 +98,7 @@ class PhotosViewController: UIViewController {
                     
                     // Since we insert the photo to the context, the frc now knows about it and tracks it as one of its objects. The context is like the database, and the frc updates the UI in real time.
                     let photo = Photo(pin: self.tappedPin!, imageURL: url, context: self.stack.context)
-                    self.photoEntityArray.append(photo)
+                    // self.photoEntityArray.append(photo)
                 }
                 
                 do {
@@ -117,15 +118,15 @@ class PhotosViewController: UIViewController {
     }
     
     // Display the images specified by the fetch request and fetchedResultsController in viewDidLoad.
-    func fetchPhotosFromCoreData() {
-
-        let fetchedObjects = fetchedResultsController.fetchedObjects
-        
-        for fetchedObject in fetchedObjects! {
-            let object = fetchedObject as! Photo
-            self.photoEntityArray.append(object)
-        }
-    }
+//    func fetchPhotosFromCoreData() {
+//
+//        let fetchedObjects = fetchedResultsController.fetchedObjects
+//        
+//        for fetchedObject in fetchedObjects! {
+//            let object = fetchedObject as! Photo
+//            // self.photoEntityArray.append(object)
+//        }
+//    }
     
     // Delete the photos selected by the user from Core Data.
     func deleteSelectedPhotos() {
@@ -156,7 +157,8 @@ class PhotosViewController: UIViewController {
             self.barButton.title = "Refresh collection"
             
         } else {
-            print("refresh collection")
+            print("Clicked Refresh collection")
+            loadPhotosFromFlickr()
         }
     }
 
