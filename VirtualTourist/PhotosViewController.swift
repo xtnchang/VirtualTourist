@@ -32,7 +32,7 @@ class PhotosViewController: UIViewController {
     
     lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
        
-        // Create a fetch request
+        // Create a fetch request to specify what objects this fetchedResultsController tracks.
         let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
         fr.sortDescriptors = [NSSortDescriptor(key: "imageData", ascending: true)]
         

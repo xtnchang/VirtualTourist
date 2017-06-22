@@ -19,6 +19,7 @@ class MapViewController: UIViewController {
     var annotation: MKPointAnnotation?
     var latitude: Double?
     var longitude: Double?
+    var pinsArray: [Pin]?
     var tappedPin: Pin?
     
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? 
@@ -56,7 +57,7 @@ class MapViewController: UIViewController {
             self.annotation?.coordinate = self.coordinate!
             self.mapView.addAnnotation(annotation!)
             
-            print("adding pin")
+            print("Adding pin")
             
             // Store the latitude and longitude values for Flickr query string parameters later
             self.latitude = self.coordinate?.latitude
@@ -64,12 +65,13 @@ class MapViewController: UIViewController {
             
             // Instantiate a Pin object
             let pin = Pin(latitude: self.latitude!, longitude: self.longitude!, context: stack.context)
+            pinsArray?.append(pin)
             
             // Save the pin
             do {
                 try stack.context.save()
             } catch {
-                print("error saving the pin")
+                print("Error saving the pin")
             }
         }
     }
@@ -86,8 +88,7 @@ class MapViewController: UIViewController {
     
     // Load all the pins that were previously created (persistence)
     func loadPins() {
-        
-        var pinsArray: [Pin]?
+
         var annotationsArray = [MKPointAnnotation]()
         
         // Create a fetch request
@@ -126,8 +127,14 @@ extension MapViewController: MKMapViewDelegate {
         controller.latitude = view.annotation?.coordinate.latitude
         controller.longitude = view.annotation?.coordinate.longitude
         
+        // Iterate through all the pins on the map to find the one that matches the one you tapped.
+        for pin in pinsArray! {
+            if pin.latitude == view.annotation?.coordinate.latitude && pin.longitude == view.annotation?.coordinate.longitude {
+                self.tappedPin = pin
+            }
+        }
+        
         // Pass the tapped pin object to the PhotosViewController
-        self.tappedPin = Pin(latitude: (view.annotation?.coordinate.latitude)!, longitude: (view.annotation?.coordinate.longitude)!, context: stack.context)
         controller.tappedPin = self.tappedPin
         
         // Deselect the pin so that it's selectable again when we return from PhotosViewController
