@@ -22,9 +22,6 @@ class PhotosViewController: UIViewController {
     var latitude: Double?
     var longitude: Double?
     
-    // Store the photo entities in an array.
-    // var photoEntityArray = [Photo]()
-    
     // Store an array of cells that the user tapped to be deleted.
     var tappedIndexPaths = [IndexPath]()
     var insertedIndexPaths: [NSIndexPath]!
@@ -65,9 +62,6 @@ class PhotosViewController: UIViewController {
         if fetchedObjects?.count == 0 {
             loadPhotosFromFlickr()
         }
-//        else {
-//            fetchPhotosFromCoreData()
-//        }
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -98,7 +92,7 @@ class PhotosViewController: UIViewController {
                     
                     // Since we insert the photo to the context, the frc now knows about it and tracks it as one of its objects. The context is like the database, and the frc updates the UI in real time.
                     let photo = Photo(pin: self.tappedPin!, imageURL: url, context: self.stack.context)
-                    // self.photoEntityArray.append(photo)
+
                 }
                 
                 do {
@@ -117,24 +111,12 @@ class PhotosViewController: UIViewController {
         }
     }
     
-    // Display the images specified by the fetch request and fetchedResultsController in viewDidLoad.
-//    func fetchPhotosFromCoreData() {
-//
-//        let fetchedObjects = fetchedResultsController.fetchedObjects
-//        
-//        for fetchedObject in fetchedObjects! {
-//            let object = fetchedObject as! Photo
-//            // self.photoEntityArray.append(object)
-//        }
-//    }
-    
     // Delete the photos selected by the user from Core Data.
     func deleteSelectedPhotos() {
         
         // Delete the photos corresponding to the indexes stored in self.tappedIndexPaths (populated in didSelectItemAt)
         for indexPath in tappedIndexPaths {
-            
-            // photoEntityArray.remove(at: indexPath.row)
+
             stack.context.delete(fetchedResultsController.object(at: indexPath as IndexPath) as! Photo)
         }
         
@@ -168,8 +150,7 @@ class PhotosViewController: UIViewController {
 extension PhotosViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        // return self.photoEntityArray.count
+
         // Return the number of objects in Core Data
         // https://www.youtube.com/watch?v=0JJJ2WGpw_I (8:30)
         return fetchedResultsController.sections![0].numberOfObjects
@@ -178,9 +159,6 @@ extension PhotosViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoViewCell
-        
-        // For each cell, retrieve the image corresponding to the cell's indexPath.
-        // let photoToLoad = photoEntityArray[indexPath.row]
    
         // The frc should have access to to the photo URLs downloaded in loadPhotosFromFlickr().
         let photoToLoad = fetchedResultsController.object(at: indexPath) as! Photo
@@ -192,6 +170,7 @@ extension PhotosViewController: UICollectionViewDataSource {
                 // Core Data is not thread friendly; put in main thread.
                 DispatchQueue.main.async {
                     cell.imageView.image = UIImage(data: imageData as! Data)
+                    
                     // Save the photo's corresponding imageData to Core Data.
                     photoToLoad.imageData = imageData
                     
