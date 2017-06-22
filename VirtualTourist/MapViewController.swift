@@ -45,6 +45,8 @@ class MapViewController: UIViewController {
         // The state property is of type UIGestureRecognizerState
         if gestureRecognizer.state == UIGestureRecognizerState.began {
             
+            print("Adding pin")
+            
             // The location method returns a CGPoint
             let pressedLocation = gestureRecognizer.location(in: mapView)
            
@@ -55,9 +57,45 @@ class MapViewController: UIViewController {
             // Add the CLLocationCoordinate2D to the map.
             self.annotation = MKPointAnnotation()
             self.annotation?.coordinate = self.coordinate!
-            self.mapView.addAnnotation(annotation!)
             
-            print("Adding pin")
+            // Store the latitude and longitude values for Flickr query string parameters later
+            self.latitude = self.coordinate?.latitude
+            self.longitude = self.coordinate?.longitude
+
+        }
+        
+        if gestureRecognizer.state == UIGestureRecognizerState.changed {
+            
+            // The location method returns a CGPoint
+            let pressedLocation = gestureRecognizer.location(in: mapView)
+            
+            // Convert the CGPoint to a CLLocationCoordinate2D
+            // https://developer.apple.com/reference/mapkit/mkmapview/1452503-convert
+            self.coordinate = mapView.convert(pressedLocation, toCoordinateFrom: mapView)
+            
+            // Add the CLLocationCoordinate2D to the map.
+            self.annotation = MKPointAnnotation()
+            self.annotation?.coordinate = self.coordinate!
+
+            // Store the latitude and longitude values for Flickr query string parameters later
+            self.latitude = self.coordinate?.latitude
+            self.longitude = self.coordinate?.longitude
+            
+        }
+        
+        if gestureRecognizer.state == UIGestureRecognizerState.ended {
+            
+            // The location method returns a CGPoint
+            let pressedLocation = gestureRecognizer.location(in: mapView)
+            
+            // Convert the CGPoint to a CLLocationCoordinate2D
+            // https://developer.apple.com/reference/mapkit/mkmapview/1452503-convert
+            self.coordinate = mapView.convert(pressedLocation, toCoordinateFrom: mapView)
+            
+            // Add the CLLocationCoordinate2D to the map.
+            self.annotation = MKPointAnnotation()
+            self.annotation?.coordinate = self.coordinate!
+            self.mapView.addAnnotation(annotation!)
             
             // Store the latitude and longitude values for Flickr query string parameters later
             self.latitude = self.coordinate?.latitude
