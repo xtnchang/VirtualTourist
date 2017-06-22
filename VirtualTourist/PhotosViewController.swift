@@ -159,6 +159,9 @@ extension PhotosViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoViewCell
+        
+        cell.activityIndicatorView.startAnimating()
+        cell.activityIndicatorView.hidesWhenStopped = true;
    
         // The frc should have access to to the photo URLs downloaded in loadPhotosFromFlickr().
         let photoToLoad = fetchedResultsController.object(at: indexPath) as! Photo
@@ -170,6 +173,7 @@ extension PhotosViewController: UICollectionViewDataSource {
                 // Core Data is not thread friendly; put in main thread.
                 DispatchQueue.main.async {
                     cell.imageView.image = UIImage(data: imageData as! Data)
+                    cell.activityIndicatorView.stopAnimating()
                     
                     // Save the photo's corresponding imageData to Core Data.
                     photoToLoad.imageData = imageData
@@ -187,6 +191,7 @@ extension PhotosViewController: UICollectionViewDataSource {
             
             DispatchQueue.main.async {
                 cell.imageView.image = UIImage(data: photoToLoad.imageData as! Data)
+                cell.activityIndicatorView.stopAnimating()
             }
         }
 
