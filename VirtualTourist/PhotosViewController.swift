@@ -129,6 +129,14 @@ class PhotosViewController: UIViewController {
         collectionView.reloadData()
     }
     
+    // Delete all the existing photos when the users presses Refresh collection.
+    func deleteAllPhotos() {
+        
+        for object in fetchedResultsController.fetchedObjects! {
+            
+            stack.context.delete(object as! Photo)
+        }
+    }
     
     @IBAction func barButtonPressed(_ sender: Any) {
         
@@ -140,6 +148,8 @@ class PhotosViewController: UIViewController {
             
         } else {
             print("Clicked Refresh collection")
+            
+            deleteAllPhotos()
             loadPhotosFromFlickr()
         }
     }
@@ -163,10 +173,10 @@ extension PhotosViewController: UICollectionViewDataSource {
         cell.activityIndicatorView.startAnimating()
         cell.activityIndicatorView.hidesWhenStopped = true;
    
-        // The frc should have access to to the photo URLs downloaded in loadPhotosFromFlickr().
+        // The frc should have access to the photo URLs downloaded in loadPhotosFromFlickr().
         let photoToLoad = fetchedResultsController.object(at: indexPath) as! Photo
     
-        // If no photo exists in Core Data, then download a photo from Flickr. If a photo exists for this indexPath in Core Data, then display the object in the fetchedResultsController.
+        // If no photo exists in Core Data, then download a photo from Flickr.
         if photoToLoad.imageData == nil {
             FlickrClient.sharedInstance().downloadPhotoWith(url: photoToLoad.imageURL!) { (success, imageData, error) in
                 
@@ -186,7 +196,7 @@ extension PhotosViewController: UICollectionViewDataSource {
                 }
             }
             
-        // Else, photoToLoad.imageData already exists.
+        // Else, photoToLoad.imageData already exists in the fetchedResultsController. Display it in the UI.
         } else {
             
             DispatchQueue.main.async {
