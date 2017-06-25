@@ -21,6 +21,7 @@ class PhotosViewController: UIViewController {
     var coordinate: CLLocationCoordinate2D?
     var latitude: Double?
     var longitude: Double?
+    var numberOfPagesAvail: Int?
     
     // Store an array of cells that the user tapped to be deleted.
     var tappedIndexPaths = [IndexPath]()
@@ -60,7 +61,7 @@ class PhotosViewController: UIViewController {
         
         // If this pin has no photos stored in Core Data, then load photos from Flickr. Otherwise, fetch the photos from Core Data.
         if fetchedObjects?.count == 0 {
-            loadPhotosFromFlickr()
+            loadPhotosFromFlickr(pageNumber: 1)
         }
         
         collectionView.delegate = self
@@ -82,9 +83,9 @@ class PhotosViewController: UIViewController {
         self.mapView.setRegion(coordinateRegion, animated: true)
     }
     
-    func loadPhotosFromFlickr() {
+    func loadPhotosFromFlickr(pageNumber: Int) {
         
-        FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude!, longitude: longitude!) { (success, urlArray, error) in
+        FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude!, longitude: longitude!, pageNumber: pageNumber) { (success, urlArray, numberOfPagesInt, error) in
                 
             if success {
                 
@@ -94,6 +95,8 @@ class PhotosViewController: UIViewController {
                     let photo = Photo(pin: self.tappedPin!, imageURL: url, context: self.stack.context)
 
                 }
+                
+                self.numberOfPagesAvail = numberOfPagesInt
                 
                 do {
                     try self.stack.context.save()
@@ -150,7 +153,9 @@ class PhotosViewController: UIViewController {
             print("Clicked Refresh collection")
             
             deleteAllPhotos()
-            loadPhotosFromFlickr()
+            
+            let pageNumber = (arc4random_uniform(UInt32(self.numberOfPagesAvail!)))
+            loadPhotosFromFlickr(pageNumber: Int(pageNumber))
         }
     }
 
