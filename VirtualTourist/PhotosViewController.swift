@@ -27,6 +27,7 @@ class PhotosViewController: UIViewController {
     var tappedIndexPaths = [IndexPath]()
     var insertedIndexPaths: [NSIndexPath]!
     var deletedIndexPaths: [NSIndexPath]!
+    var updatedIndexPaths: [NSIndexPath]!
     
     lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
        
@@ -240,6 +241,7 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
         
         insertedIndexPaths = [NSIndexPath]()
         deletedIndexPaths = [NSIndexPath]()
+        updatedIndexPaths = [NSIndexPath]()
     }
     
     // https://www.youtube.com/watch?v=0JJJ2WGpw_I (13:50-15:00)
@@ -252,10 +254,17 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
         case .insert:
             insertedIndexPaths.append(newIndexPath! as NSIndexPath)
             print("Inserted a new index path")
+            break
             
         case .delete:
             deletedIndexPaths.append(indexPath! as NSIndexPath)
             print("Deleted an index path")
+            break
+            
+        case .update:
+            updatedIndexPaths.append(indexPath! as NSIndexPath)
+            print("Deleted an index path")
+            break
             
         default:
             break
@@ -273,6 +282,10 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
             
             for indexPath in self.deletedIndexPaths{
                 self.collectionView.deleteItems(at: [indexPath as IndexPath])
+            }
+            
+            for indexPath in self.updatedIndexPaths{
+                self.collectionView.reloadItems(at: [indexPath as IndexPath])
             }
 
         }, completion: nil)
