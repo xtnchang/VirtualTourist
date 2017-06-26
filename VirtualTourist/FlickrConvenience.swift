@@ -51,13 +51,10 @@ extension FlickrClient {
             }
             
             /* GUARD: Is the "pages" key in our result? */
-            guard let numberOfPages = photosContainer[FlickrResponseKeys.Pages] as? String else {
+            guard let numberOfPagesInt = photosContainer[FlickrResponseKeys.Pages] as? Int else {
                 sendError(error: "Cannot find key '\(FlickrResponseKeys.Pages)' in \(deserializedData)")
                 return
             }
-            
-            let numberOfPagesInt = Int(numberOfPages)
-
             
             var urlArray = [String]()
             
