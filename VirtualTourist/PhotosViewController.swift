@@ -86,7 +86,7 @@ class PhotosViewController: UIViewController {
     
     func loadPhotosFromFlickr(pageNumber: Int) {
         
-        FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude!, longitude: longitude!, pageNumber: pageNumber) { (success, urlArray, numberOfPagesInt, error) in
+        FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude!, longitude: longitude!, pageNumber: pageNumber) { (success, urlArray, error) in
                 
             if success {
                 
@@ -96,8 +96,6 @@ class PhotosViewController: UIViewController {
                     let photo = Photo(pin: self.tappedPin!, imageURL: url, context: self.stack.context)
 
                 }
-                
-                self.numberOfPagesAvail = numberOfPagesInt
                 
                 do {
                     try self.stack.context.save()
@@ -155,8 +153,15 @@ class PhotosViewController: UIViewController {
             
             deleteAllPhotos()
             
-            let pageNumber = (arc4random_uniform(UInt32(self.numberOfPagesAvail!)))
-            loadPhotosFromFlickr(pageNumber: Int(pageNumber))
+            FlickrClient.sharedInstance().getNumberOfPages(latitude: self.latitude!, longitude: self.longitude!) { (success, numberOfPages, error) in
+                
+                if success {
+                    
+                    let pageNumber = (arc4random_uniform(UInt32(numberOfPages!)))
+                    
+                    self.loadPhotosFromFlickr(pageNumber: Int(pageNumber))
+                }
+            }
         }
     }
 
