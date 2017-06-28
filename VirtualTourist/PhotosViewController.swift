@@ -25,9 +25,9 @@ class PhotosViewController: UIViewController {
     
     // Store an array of cells that the user tapped to be deleted.
     var tappedIndexPaths = [IndexPath]()
-    var insertedIndexPaths: [NSIndexPath]!
-    var deletedIndexPaths: [NSIndexPath]!
-    var updatedIndexPaths: [NSIndexPath]!
+    var insertedIndexPaths: [IndexPath]!
+    var deletedIndexPaths: [IndexPath]!
+    var updatedIndexPaths: [IndexPath]!
     
     lazy var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
        
@@ -244,9 +244,9 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
-        insertedIndexPaths = [NSIndexPath]()
-        deletedIndexPaths = [NSIndexPath]()
-        updatedIndexPaths = [NSIndexPath]()
+        insertedIndexPaths = [IndexPath]()
+        deletedIndexPaths = [IndexPath]()
+        updatedIndexPaths = [IndexPath]()
     }
     
     // https://www.youtube.com/watch?v=0JJJ2WGpw_I (13:50-15:00)
@@ -257,17 +257,17 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
         switch type {
             
         case .insert:
-            insertedIndexPaths.append(newIndexPath! as NSIndexPath)
+            insertedIndexPaths.append(newIndexPath!)
             print("Inserted a new index path")
             break
             
         case .delete:
-            deletedIndexPaths.append(indexPath! as NSIndexPath)
+            deletedIndexPaths.append(indexPath!)
             print("Deleted an index path")
             break
             
         case .update:
-            updatedIndexPaths.append(indexPath! as NSIndexPath)
+            updatedIndexPaths.append(indexPath!)
             print("Updated an index path")
             break
             
