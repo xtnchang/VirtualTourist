@@ -33,7 +33,7 @@ class PhotosViewController: UIViewController {
        
         // Create a fetch request to specify what objects this fetchedResultsController tracks.
         let fr = NSFetchRequest<NSFetchRequestResult>(entityName: "Photo")
-        fr.sortDescriptors = [NSSortDescriptor(key: "imageData", ascending: true)]
+        fr.sortDescriptors = [NSSortDescriptor(key: "imageURL", ascending: true)]
         
         // Specify that we only want the photos associated with the tapped pin. (pin is the relationships)
         fr.predicate = NSPredicate(format: "pin = %@", self.tappedPin!)
@@ -268,7 +268,7 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
             
         case .update:
             updatedIndexPaths.append(indexPath! as NSIndexPath)
-            print("Deleted an index path")
+            print("Updated an index path")
             break
             
         default:
@@ -281,6 +281,7 @@ extension PhotosViewController: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         
         collectionView.performBatchUpdates({
+            
             for indexPath in self.insertedIndexPaths{
                 self.collectionView.insertItems(at: [indexPath as IndexPath])
             }
