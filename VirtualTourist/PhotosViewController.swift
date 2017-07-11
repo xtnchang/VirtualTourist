@@ -86,7 +86,7 @@ class PhotosViewController: UIViewController {
     
     func loadPhotosFromFlickr(pageNumber: Int) {
         
-        FlickrClient.sharedInstance().getLocationPhotos(latitude: latitude!, longitude: longitude!, pageNumber: pageNumber) { (success, urlArray, error) in
+        FlickrClient.sharedInstance.getLocationPhotos(latitude: latitude!, longitude: longitude!, pageNumber: pageNumber) { (success, urlArray, error) in
                 
             if success {
                 
@@ -153,7 +153,7 @@ class PhotosViewController: UIViewController {
             
             deleteAllPhotos()
             
-            FlickrClient.sharedInstance().getNumberOfPages(latitude: self.latitude!, longitude: self.longitude!) { (success, numberOfPages, error) in
+            FlickrClient.sharedInstance.getNumberOfPages(latitude: self.latitude!, longitude: self.longitude!) { (success, numberOfPages, error) in
                 
                 if success {
                     
@@ -189,7 +189,7 @@ extension PhotosViewController: UICollectionViewDataSource {
     
         // If no photo exists in Core Data, then download a photo from Flickr.
         if photoToLoad.imageData == nil {
-            FlickrClient.sharedInstance().downloadPhotoWith(url: photoToLoad.imageURL!) { (success, imageData, error) in
+            FlickrClient.sharedInstance.downloadPhotoWith(url: photoToLoad.imageURL!) { (success, imageData, error) in
                 
                 DispatchQueue.main.async {
                     cell.imageView.image = UIImage(data: imageData as! Data)

@@ -94,10 +94,12 @@ class FlickrClient {
     
     // MARK: Shared Instance
     
-    class func sharedInstance() -> FlickrClient {
-        struct Singleton {
-            static var sharedInstance = FlickrClient()
-        }
-        return Singleton.sharedInstance
-    }
+//    class func sharedInstance() -> FlickrClient {
+//        struct Singleton {
+//            static var sharedInstance = FlickrClient()
+//        }
+//        return Singleton.sharedInstance
+//    }
+    
+    static var sharedInstance = FlickrClient()
 }
