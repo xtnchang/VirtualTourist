@@ -14,6 +14,7 @@ extension FlickrClient {
     
     // MARK: URL Constants
     struct Constants {
+        // Hardcode as "https" instead of "https://" because flickrURLFromParameters() takes care of it.
         static let APIScheme = "https"
         static let APIHost = "api.flickr.com"
         static let APIPath = "/services/rest/"
