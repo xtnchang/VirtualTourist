@@ -22,8 +22,6 @@ class MapViewController: UIViewController {
     var pinsArray: [Pin]?
     var tappedPin: Pin?
     
-    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>? 
-    
     // Get the stack
     let stack = (UIApplication.shared.delegate as! AppDelegate).stack
     
