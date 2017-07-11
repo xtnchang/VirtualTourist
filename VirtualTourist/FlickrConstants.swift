@@ -14,26 +14,26 @@ extension FlickrClient {
     
     // MARK: URL Constants
     struct Constants {
-        static let APIScheme = "https://"
+        static let APIScheme = "https"
         static let APIHost = "api.flickr.com"
-        static let APIPath = "/services/rest/?"
+        static let APIPath = "/services/rest/"
     }
     
     // MARK: Flickr Query String Parameter Keys
     struct FlickrParameterKeys {
-        static let Method = "method="
-        static let APIKey = "api_key="
-        static let GalleryID = "gallery_id="
-        static let Extras = "extras="
-        static let Format = "format="
-        static let NoJSONCallback = "nojsoncallback="
-        static let SafeSearch = "safe_search="
-        static let Text = "text="
-        static let BoundingBox = "bbox="
-        static let PerPage = "per_page="
-        static let Page = "page="
-        static let Latitude = "lat="
-        static let Longitude = "lon="
+        static let Method = "method"
+        static let APIKey = "api_key"
+        static let GalleryID = "gallery_id"
+        static let Extras = "extras"
+        static let Format = "format"
+        static let NoJSONCallback = "nojsoncallback"
+        static let SafeSearch = "safe_search"
+        static let Text = "text"
+        static let BoundingBox = "bbox"
+        static let PerPage = "per_page"
+        static let Page = "page"
+        static let Latitude = "lat"
+        static let Longitude = "lon"
     }
     
     // MARK: Flickr Query String Parameter Values

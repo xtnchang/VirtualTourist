@@ -13,13 +13,11 @@ class FlickrClient {
     
     // MARK: GET
     // We need to pass in the query string parameters (which include the method)
-    func taskForGETMethod(parameters: String?, completionHandlerForGET: @escaping (_ deserializedData: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
+    func taskForGETMethod(parameters: [String:AnyObject], completionHandlerForGET: @escaping (_ deserializedData: AnyObject?, _ error: NSError?) -> Void) -> URLSessionDataTask {
         
         /* 2/3. Build the URL, Configure the request */
-        let urlString = Constants.APIScheme + Constants.APIHost + Constants.APIPath + parameters!
-        print(urlString)
-        let url = NSURL(string: urlString)
-        let request = NSMutableURLRequest(url: url as! URL)
+        let flickrUrl = flickrURLFromParameters(parameters)
+        let request = NSMutableURLRequest(url: flickrUrl)
         let session = URLSession.shared
         
         let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
@@ -75,6 +73,23 @@ class FlickrClient {
         
         // If there's no error, the completion handler is passed the arguments below.
         completionHandlerForParsingJSON(deserializedData, nil)
+    }
+    
+    // Create Flickr URL
+    func flickrURLFromParameters(_ parameters: [String:AnyObject]) -> URL {
+        
+        var components = URLComponents()
+        components.scheme = Constants.APIScheme
+        components.host = Constants.APIHost
+        components.path = Constants.APIPath
+        components.queryItems = [URLQueryItem]()
+        
+        for (key, value) in parameters {
+            let queryItem = URLQueryItem(name: key, value: "\(value)")
+            components.queryItems!.append(queryItem)
+        }
+        
+        return components.url!
     }
     
     // MARK: Shared Instance

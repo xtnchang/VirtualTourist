@@ -18,9 +18,19 @@ extension FlickrClient {
         let lonString = String(describing: longitude)
         
         // Build the query string parameters to pass into taskForGET.
-        let parameters = FlickrParameterKeys.Method + FlickrParameterValues.SearchMethod + "&" + FlickrParameterKeys.APIKey + FlickrParameterValues.APIKey + "&" + FlickrParameterKeys.Latitude + latString + "&" + FlickrParameterKeys.Longitude + lonString + "&" + FlickrParameterKeys.Extras + FlickrParameterValues.MediumURL + "&" + FlickrParameterKeys.Format + FlickrParameterValues.ResponseFormat + "&" + FlickrParameterKeys.NoJSONCallback + FlickrParameterValues.DisableJSONCallback + "&" + FlickrParameterKeys.PerPage + FlickrParameterValues.PerPage + "&" + FlickrParameterKeys.Page + "\(pageNumber)"
+        let parameters = [
+            FlickrParameterKeys.Method: FlickrParameterValues.SearchMethod,
+            FlickrParameterKeys.APIKey: FlickrParameterValues.APIKey,
+            FlickrParameterKeys.Latitude: latString,
+            FlickrParameterKeys.Longitude: lonString,
+            FlickrParameterKeys.Extras: FlickrParameterValues.MediumURL,
+            FlickrParameterKeys.Format: FlickrParameterValues.ResponseFormat,
+            FlickrParameterKeys.NoJSONCallback: FlickrParameterValues.DisableJSONCallback,
+            FlickrParameterKeys.PerPage: FlickrParameterValues.PerPage,
+            FlickrParameterKeys.Page: "\(pageNumber)"
+        ]
         
-        taskForGETMethod(parameters: parameters) { (deserializedData, error) in
+        taskForGETMethod(parameters: parameters as [String : AnyObject]) { (deserializedData, error) in
             
             func sendError(error: String) {
                 print(error)
@@ -75,9 +85,18 @@ extension FlickrClient {
         let lonString = String(describing: longitude)
         
         // Build the query string parameters to pass into taskForGET.
-        let parameters = FlickrParameterKeys.Method + FlickrParameterValues.SearchMethod + "&" + FlickrParameterKeys.APIKey + FlickrParameterValues.APIKey + "&" + FlickrParameterKeys.Latitude + latString + "&" + FlickrParameterKeys.Longitude + lonString + "&" + FlickrParameterKeys.Extras + FlickrParameterValues.MediumURL + "&" + FlickrParameterKeys.Format + FlickrParameterValues.ResponseFormat + "&" + FlickrParameterKeys.NoJSONCallback + FlickrParameterValues.DisableJSONCallback + "&" + FlickrParameterKeys.PerPage + FlickrParameterValues.PerPage
+        let parameters = [
+            FlickrParameterKeys.Method: FlickrParameterValues.SearchMethod,
+            FlickrParameterKeys.APIKey: FlickrParameterValues.APIKey,
+            FlickrParameterKeys.Latitude: latString,
+            FlickrParameterKeys.Longitude: lonString,
+            FlickrParameterKeys.Extras: FlickrParameterValues.MediumURL,
+            FlickrParameterKeys.Format: FlickrParameterValues.ResponseFormat,
+            FlickrParameterKeys.NoJSONCallback: FlickrParameterValues.DisableJSONCallback,
+            FlickrParameterKeys.PerPage: FlickrParameterValues.PerPage
+        ]
         
-        taskForGETMethod(parameters: parameters) { (deserializedData, error) in
+        taskForGETMethod(parameters: parameters as [String : AnyObject]) { (deserializedData, error) in
             
             func sendError(error: String) {
                 print(error)
